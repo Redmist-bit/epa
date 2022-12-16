@@ -1,0 +1,67 @@
+{
+  "name": "epa",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@syncfusion/ej2-vue-buttons": "^18.3.40",
+    "@syncfusion/ej2-vue-calendars": "^18.3.42",
+    "@syncfusion/ej2-vue-dropdowns": "^18.4.49",
+    "@syncfusion/ej2-vue-grids": "^18.3.44",
+    "@syncfusion/ej2-vue-navigations": "^18.4.39",
+    "@syncfusion/ej2-vue-pivotview": "^19.2.51",
+    "axios": "^0.21.4",
+    "core-js": "^3.6.5",
+    "register-service-worker": "^1.7.1",
+    "vue": "^2.6.11",
+    "vue-loading-overlay": "^3.4.2",
+    "vue-router": "^3.2.0",
+    "vuetify": "^2.6.13",
+    "vuetify-money": "^1.2.0",
+    "vue-i18n": "^8.25.0",
+    "vue-country-flag": "^2.2.0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.13",
+    "@vue/cli-plugin-eslint": "~4.5.13",
+    "@vue/cli-plugin-pwa": "~4.5.13",
+    "@vue/cli-plugin-router": "~4.5.13",
+    "@vue/cli-service": "~4.5.13",
+    "@vue/eslint-config-prettier": "^6.0.0",
+    "babel-eslint": "^10.1.0",
+    "deepmerge": "^4.2.2",
+    "eslint": "^6.7.2",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-vue": "^6.2.2",
+    "prettier": "^2.2.1",
+    "sass": "^1.32.13",
+    "sass-loader": "^10.2.0",
+    "vue-template-compiler": "^2.6.11",
+    "vue-cli-plugin-vuetify": "^2.4.2",
+    "vuetify-loader": "^1.7.3"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended",
+      "@vue/prettier"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
