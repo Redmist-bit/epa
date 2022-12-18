@@ -336,7 +336,7 @@
                           </v-card>
                         </v-col>
 
-                        <v-col cols="12">
+                        <!-- <v-col cols="12">
                           <v-card class="elevation-5">
                             <v-tabs
                               v-model="tab1"
@@ -354,11 +354,9 @@
                               </v-tab-item>
                             </v-tabs-items>
                             <div style="display: none">
-                              <!-- <HargaJual ref='HargaJual'/>
-                            <HargaBeli ref='HargaBeli'/> -->
                             </div>
                           </v-card>
-                        </v-col>
+                        </v-col> -->
                       </v-row>
                     </v-col>
                   </v-card>
@@ -561,7 +559,7 @@ import "vue-loading-overlay/dist/vue-loading.css";
 import Satuan from "@/views/Barang/Satuan";
 import HargaBeli from "@/views/Barang/HargaBeli";
 import HargaJual from "@/views/Barang/HargaJual";
-import Stok from "@/views/Barang/Stok";
+// import Stok from "@/views/Barang/Stok";
 import { DatePickerPlugin } from "@syncfusion/ej2-vue-calendars";
 import {
   GridPlugin,
@@ -626,7 +624,7 @@ export default {
     Satuan,
     HargaJual,
     HargaBeli,
-    Stok,
+    // Stok,
     Loading,
   },
   data() {
@@ -1281,10 +1279,10 @@ export default {
             this.editedItem.Gudang = this.gudang.find(
               (g) => g.Kode == res.data.Gudang
             );
-            this.editedItem.StokMinimum =
-              res.data.stoklimit === null ? 0 : res.data.stoklimit.StokMinimum;
-            this.editedItem.StokMaksimum =
-              res.data.stoklimit === null ? 0 : res.data.stoklimit.StokMaksimum;
+            // this.editedItem.StokMinimum =
+            //   res.data.stoklimit === null ? 0 : res.data.stoklimit.StokMinimum;
+            // this.editedItem.StokMaksimum =
+            //   res.data.stoklimit === null ? 0 : res.data.stoklimit.StokMaksimum;
             this.itemtabhargajual = res.data.hrgjual.map((d) => {
               let obj = d;
               obj.Rasio = res.data.satuan.find(
@@ -1305,7 +1303,7 @@ export default {
               ).Nama;
               return obj;
             });
-            this.itemtabstok = res.data.stok;
+            // this.itemtabstok = res.data.stok;
             this.mataUangs = [...this.mataUangs];
             this.isLoading = false;
           },

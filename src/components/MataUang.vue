@@ -3,32 +3,35 @@
     <loading :active.sync="isLoading" :is-full-page="fullPage"></loading>
 
     <div :class="mobile ? 'pa-3' : ''">
-      <v-card tile outlined :class="mobile ? 'elevation-2 pa-2' : ''">
+      <v-card
+        tile
+        outlined
+        :class="mobile ? 'elevation-2 pa-2' : ''"
+        :style="mobile ? '' : 'margin-bottom: 90px;'"
+      >
         <v-toolbar flat v-show="mobile == false">
           <v-toolbar-title class="text-h5">
-            <strong>{{ $t("Gudang.MainTitle") }}</strong>
+            <strong>{{ $t("Uang.MainTitle") }} </strong>
           </v-toolbar-title>
           <v-spacer></v-spacer>
         </v-toolbar>
 
         <v-toolbar
-          dark
-          v-show="mobile == true"
           flat
+          dark
           dense
           color="blue darken-4"
+          v-show="mobile == true"
         >
-          <v-toolbar-title>
-            {{ $t("Gudang.MainTitle") }}
-          </v-toolbar-title>
+          <v-toolbar-title dark>{{ $t("Uang.MainTitle") }}</v-toolbar-title>
 
           <v-spacer></v-spacer>
 
           <v-dialog
-            v-model="dialogGudang"
+            v-model="dialogMataUang"
             scrollable
+            max-width="400px"
             persistent
-            max-width="600px"
           >
             <template v-slot:activator="{ on, attrs }">
               <v-btn
@@ -36,22 +39,20 @@
                 v-bind="attrs"
                 v-on="on"
                 :disabled="btn_tambah"
-                v-show="mobile == true"
                 class="text-capitalize subtitle-1"
               >
                 <v-icon left>mdi-plus-thick</v-icon>
-                <span>{{ $t("Gudang.BtnTambah") }}</span>
+                <span>{{ $t("All.BtnTambah") }} </span>
               </v-btn>
             </template>
 
             <v-card class="rounded-lg">
-              <v-toolbar dark flat outline color="blue darken-4">
+              <v-toolbar flat dark outline color="blue darken-4">
                 <v-card-title>
                   <span class="headline">{{ formTitle }}</span>
                 </v-card-title>
                 <v-spacer></v-spacer>
-
-                <v-btn text fab small @click="closeDialogGudang">
+                <v-btn dark text fab small @click="closeDialogMataUang()">
                   <v-icon class="mx-1">mdi-window-close</v-icon>
                 </v-btn>
               </v-toolbar>
@@ -77,17 +78,16 @@
                           ></span
                         >
                       </v-snackbar>
-                      <v-col cols="12" sm="6" md="6">
+                      <v-col cols="12" sm="12" md="12">
                         <v-text-field
                           dense
-                          disabled
                           v-model="editedItem.Kode"
                           label="Kode"
                         >
                         </v-text-field>
                       </v-col>
 
-                      <v-col cols="12" sm="6" md="6">
+                      <v-col cols="12" sm="12" md="12">
                         <v-text-field
                           dense
                           v-model="editedItem.Nama"
@@ -96,47 +96,7 @@
                         </v-text-field>
                       </v-col>
 
-                      <v-col cols="12" sm="6" md="6">
-                        <v-text-field
-                          dense
-                          clearable
-                          v-model="editedItem.Alamat"
-                          label="Alamat"
-                        >
-                        </v-text-field>
-                      </v-col>
-
-                      <v-col cols="12" sm="6" md="6">
-                        <!-- <v-autocomplete
-                          dense
-                          clearable
-                          v-model="editedItem.Kota"
-                          :items="namakota"
-                          label="Kota">
-                        </v-autocomplete> -->
-                        <div style="margin-top: -16px">
-                          <ejs-autocomplete
-                            :maxlength="25"
-                            label-size="18px"
-                            floatLabelType="Auto"
-                            :dataSource="namakota"
-                            v-model="editedItem.Kota"
-                            :placeholder="waterMark"
-                          ></ejs-autocomplete>
-                        </div>
-                      </v-col>
-
-                      <v-col cols="12" sm="6" md="6">
-                        <v-text-field
-                          dense
-                          clearable
-                          v-model="editedItem.Memo"
-                          label="Memo"
-                        >
-                        </v-text-field>
-                      </v-col>
-
-                      <v-col cols="12" sm="6" md="6">
+                      <v-col cols="12" sm="12" md="12">
                         <v-switch
                           dense
                           class="mt-2"
@@ -155,13 +115,11 @@
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <!-- <v-btn
-                  outlined
-                  @click="closeDialogGudang"
-                  color="blue darken-4"
-                >
-                  <span>{{$t('Gudang.BtnBatal')}}</span>
+                  dark
+                  color="error"
+                  @click="dialogMataUang">
+                  <v-icon class="mr-1">mdi-close-circle</v-icon>Batal
                 </v-btn> -->
-
                 <v-btn
                   dark
                   depressed
@@ -170,37 +128,32 @@
                   class="mr-n2"
                 >
                   <v-icon left>mdi-content-save</v-icon>
-                  <span class="mr-1">{{ $t("All.BtnSimpan") }}</span>
+                  <span class="mr-1">{{ $t("All.BtnSimpan") }} </span>
                 </v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
         </v-toolbar>
 
-        <v-divider></v-divider>
-
         <div id="app">
           <ejs-grid
-            :dataSource="data"
-            style="height: 100%"
-            :height="mobile ? '43vh' : 'auto'"
+            :dataSource="DataMataUang"
             width="100%"
             gridLines="Both"
+            :height="mobile ? 'auto' : 'auto'"
             :allowReordering="true"
             :editSettings="editSettings"
             :selectionSettings="selectionOptions"
-            :allowGrouping="mobile"
-            :groupSettings="groupSettings"
             :allowSorting="true"
             :allowMultiSorting="true"
-            :allowFiltering="mobile"
+            :allowFiltering="true"
+            :rowDataBound="rowDataBound"
             :filterSettings="filterOptions"
             :allowResizing="true"
             :allowPaging="true"
             :pageSettings="pageSettings"
             :toolbar="toolbarOptions"
             :commandClick="commandClick"
-            :rowDataBound="rowDataBound"
           >
             <e-columns>
               <e-column
@@ -208,10 +161,9 @@
                 :allowFiltering="false"
                 field="Commands"
                 headerText="Aksi"
-                width="105"
-                textAlign="Center"
+                width="120"
                 :commands="commands"
-                :lockColumn="true"
+                textAlign="Center"
               >
                 <div class="btn-group">
                   <button
@@ -243,23 +195,6 @@
                 :filter="filter"
                 field="Nama"
                 headerText="Nama"
-                textAlign="Left"
-                width="180"
-              ></e-column>
-
-              <e-column
-                :filter="filter"
-                field="Alamat"
-                headerText="Alamat"
-                textAlign="Left"
-                width="180"
-              ></e-column>
-
-              <e-column
-                :filter="filter"
-                field="Kota"
-                headerText="Kota"
-                textAlign="Left"
                 width="180"
               ></e-column>
 
@@ -269,15 +204,34 @@
                 headerText="Aktif"
                 textAlign="Center"
                 displayAsCheckBox="true"
-                width="110"
+                width="180"
               ></e-column>
 
               <e-column
                 :filter="filter"
-                field="Memo"
-                headerText="Memo"
-                textAlign="Left"
-                displayAsCheckBox="true"
+                field="DiBuatTgl"
+                headerText="DiBuatTgl"
+                width="180"
+              ></e-column>
+
+              <e-column
+                :filter="filter"
+                field="DiBuatOleh"
+                headerText="DiBuatOleh"
+                width="180"
+              ></e-column>
+
+              <e-column
+                :filter="filter"
+                field="DiUbahTgl"
+                headerText="DiUbahTgl"
+                width="180"
+              ></e-column>
+
+              <e-column
+                :filter="filter"
+                field="DiUbahOleh"
+                headerText="DiUbahOleh"
                 width="180"
               ></e-column>
             </e-columns>
@@ -316,7 +270,6 @@ import {
   Resize,
   Filter,
   Sort,
-  Group,
   Edit,
   CommandColumn,
   Reorder,
@@ -330,37 +283,28 @@ export default {
   },
   data() {
     return {
-      alert: "",
       pesan: "",
+      alert: "",
       ScrollKeAtas: false,
       mobile: null,
       windowSize: { x: 0, y: 0 },
-      action: null,
-      btn_tambah: true,
       isLoading: false,
       fullPage: true,
-      namakota: [],
-      waterMark: "Kota",
+
       editedIndex: -1,
       defaultItem: {
         Kode: "",
         Nama: "",
-        Alamat: "",
-        Kota: "",
         Aktif: true,
-        Memo: "",
       },
       editedItem: {
         Kode: "",
         Nama: "",
-        Alamat: "",
-        Kota: "",
         Aktif: true,
-        Memo: "",
       },
-      dialogGudang: false,
+      dialogMataUang: false,
       token: localStorage.getItem("token"),
-      data: [],
+      DataMataUang: [],
       commands: [],
       groupSettings: { allowReordering: true },
       selectionOptions: { type: "Multiple" },
@@ -370,11 +314,13 @@ export default {
       filter: { type: "CheckBox" },
       editSettings: {
         showDeleteConfirmDialog: true,
-        allowEditing: false,
-        allowAdding: false,
+        allowEditing: true,
+        allowAdding: true,
         allowDeleting: true,
         mode: "Normal",
       },
+      action: null,
+      btn_tambah: true,
     };
   },
 
@@ -386,7 +332,6 @@ export default {
       Resize,
       Filter,
       Sort,
-      Group,
       Edit,
       CommandColumn,
       Reorder,
@@ -394,11 +339,9 @@ export default {
   },
 
   mounted() {
-    //check actions
+    // this.getData()
     if (this.action.some((a) => a == "R")) {
       this.getData();
-      this.countKode();
-      this.getKota();
     }
     if (this.action.some((a) => a == "C")) {
       this.btn_tambah = false;
@@ -420,7 +363,7 @@ export default {
     }
   },
   created() {
-    //get action for this page
+    // get actions for this page
     this.action = Object.assign(
       [],
       this.$route.params.action
@@ -431,13 +374,10 @@ export default {
     );
   },
 
-  // dataStateChange(state){
-  //     console.log(state)
-  // },
   watch: {
     "editedItem.Nama": function (params) {
       if (params == "") {
-        this.pesan = "Nama Gudang tidak boleh kosong";
+        this.pesan = "Nama Mata Uang tidak boleh kosong";
         this.alert = true;
       } else {
         this.alert = false;
@@ -453,20 +393,14 @@ export default {
       }
     },
 
-    dialogGudang(val) {
-      val || this.closeDialogGudang();
-    },
-    data: {
-      handler() {
-        this.countKode();
-      },
+    dialogMataUang(val) {
+      val || this.closeDialogMataUang();
     },
   },
+
   computed: {
     formTitle() {
-      return this.editedIndex === -1
-        ? this.$t("Gudang.DialogTitleTambah")
-        : this.$t("Gudang.DialogTitleEdit");
+      return this.editedIndex === -1 ? "Tambah Mata Uang" : "Ubah Mata Uang";
     },
   },
   methods: {
@@ -484,77 +418,50 @@ export default {
       this.windowSize = { x: window.innerWidth, y: window.innerHeight };
     },
 
+    rowDataBound: function (args) {
+      if (args.data.Aktif == "0") {
+        args.row.classList.add("not-active");
+      }
+    },
     save() {
       if (this.editedIndex == -1) {
-        if (this.editedItem.Nama == "") {
+        if (this.editedItem.Kode == "") {
           this.alert = true;
-          this.pesan = "Nama Gudang tidak boleh kosong";
+          this.pesan = "Kode Mata Uang tidak boleh kosong";
+        } else if (this.editedItem.Nama == "") {
+          this.alert = true;
+          this.pesan = "Nama Mata Uang tidak boleh kosong";
         } else {
           this.isLoading = true;
           this.TambahData();
         }
       } else {
-        if (this.editedItem.Nama == "") {
+        if (this.editedItem.Kode == "") {
           this.alert = true;
-          this.pesan = "Nama Gudang tidak boleh kosong";
+          this.pesan = "Kode Mata Uang tidak boleh kosong";
+        } else if (this.editedItem.Nama == "") {
+          this.alert = true;
+          this.pesan = "Nama Mata Uang tidak boleh kosong";
         } else {
           this.isLoading = true;
           this.UpdateData();
         }
       }
     },
-
-    countKode() {
-      let userKode = JSON.parse(localStorage.getItem("user")).Kode.substring(
-        0,
-        4
-      );
-      let x = "0000";
-      let spacer = "/";
-      let x0 = 1;
-      let s0 = [];
-      let totalKode = [];
-      let hitungan = [];
-      if (this.data.length > 0) {
-        for (let index = 0; index < this.data.length; index++) {
-          const element = this.data[index];
-          s0.push(element);
-          totalKode.push(s0[index].Kode);
-          // totalKode.sort(function(a, b){return b-a})
-          hitungan = parseInt(s0.length - 1);
-        }
-        let xsx = totalKode[hitungan];
-        let xsx1 = xsx.slice(5, 9);
-        let xsx2 = xsx1.replace(/^0+/, "");
-        let desc = parseInt(xsx2) + 1;
-        let r0 = (x + desc).slice(-x.length);
-        this.editedItem.Kode = userKode + spacer + r0;
-      } else if (this.data.length == 0) {
-        let yuklah = (x + x0).slice(-x.length);
-        this.editedItem.Kode = userKode + spacer + yuklah;
-      }
-    },
-
     TambahData() {
       api
-        .post("/gudangs?token=" + this.token, {
+        .post("/mataUangs?token=" + this.token, {
           Kode: this.editedItem.Kode,
           Nama: this.editedItem.Nama,
-          Alamat: this.editedItem.Alamat,
-          Kota: this.editedItem.Kota,
-          Aktif: this.editedItem.Aktif.toString(),
-          Memo: this.editedItem.Memo,
+          Aktif: this.editedItem.Aktif,
         })
-        .then((res) => {
+        .then(() => {
           (this.isLoading = false), (this.Kode = "");
           this.Nama = "";
-          this.Alamat = "";
-          this.Kota = "";
           this.Aktif = "";
-          this.Memo = "";
-          console.log(res);
+          // console.log(res)
           this.getData();
-          this.closeDialogGudang();
+          this.closeDialogMataUang();
         })
         .catch((err) => {
           console.log(err);
@@ -563,136 +470,91 @@ export default {
 
     UpdateData() {
       api
-        .put("/gudangs/" + this.editedItem.id + "?token=" + this.token, {
+        .put("/mataUangs/" + this.editedItem.id + "?token=" + this.token, {
           Kode: this.editedItem.Kode,
           Nama: this.editedItem.Nama,
-          Alamat: this.editedItem.Alamat,
-          Kota: this.editedItem.Kota,
-          Aktif: this.editedItem.Aktif.toString(),
-          Memo: this.editedItem.Memo,
+          Aktif: this.editedItem.Aktif,
         })
-        .then((res) => {
+        .then(() => {
           this.isLoading = false;
           this.Kode = "";
           this.Nama = "";
-          this.Alamat = "";
-          this.Kota = "";
           this.Aktif = "";
-          this.Memo = "";
-          console.log(res);
+          // console.log(res)
           this.getData();
-          this.closeDialogGudang();
+          this.closeDialogMataUang();
         })
         .catch((err) => {
           console.log(err);
         });
     },
 
-    closeDialogGudang() {
-      this.alert = false;
-      this.dialogGudang = false;
+    closeDialogMataUang() {
+      this.dialogMataUang = false;
       this.editedItem = this.defaultItem;
       this.editedIndex = -1;
-      // this.editedItem.Kota = this.namakota[0].Kota
-      // this.defaultItem.Kota = this.namakota[0].Kota
+      this.alert = false;
       this.$nextTick(() => {
         // this.id = ''
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
       });
-      this.countKode();
     },
 
     commandClick: function (args) {
       if (args.target.classList.contains("custombutton")) {
-        // let tampung = []
         let data = JSON.stringify(args.rowData);
-        // console.log(args);
-        // alert(JSON.stringify(args.rowData));
-        // console.log(JSON.stringify(args.rowData))
-        // tampung.push(args.rowData)
-        // this.editedItem = Object.assign({},data)
         console.log(data);
       } else if (args.target.classList.contains("Delete")) {
         var r = confirm("Yakin Hapus Data?");
         if (r == true) {
           api
-            .delete("/gudangs/" + args.rowData.id + "?token=" + this.token)
-            .then((res) => {
+            .delete("/mataUangs/" + args.rowData.id + "?token=" + this.token)
+            .then(() => {
               // this.item.splice(index, 1)
-              console.log(res);
+              // console.log(res)
               this.getData();
             })
             .catch((err) => {
               console.log(err);
             });
         }
-        // let data = JSON.stringify(args.rowData)
-        // console.log(data)
-        // console.log(args)
       } else if (args.target.classList.contains("Edit")) {
         let data = args;
         this.editedIndex = 1;
-        console.log(data);
+        // console.log(data)
         this.editedItem = data.rowData;
-        this.dialogGudang = true;
+        this.dialogMataUang = true;
       }
     },
 
-    actionComplete(args) {
-      // if ((args.requestType === 'beginEdit' || args.requestType === 'add')) {
-      //     let dialog = args.dialog;
-      //     dialog.height = 400;
-      //     // change the header of the dialog
-      //     dialog.header = args.requestType === 'beginEdit' ? 'Edit Record' : 'New Record';
-      // }
-      console.log(args);
-    },
-    rowDataBound: function (args) {
-      if (args.data.Aktif == "0") {
-        args.row.classList.add("not-active");
-      }
-    },
     // customiseCell: function(args) {
     //     if (args.column.field === 'Kode' ||
     //         args.column.field === 'Nama' ||
-    //         args.column.field === 'Alamat' ||
-    //         args.column.field === 'Kota' ||
     //         args.column.field === 'Aktif' ||
-    //         args.column.field === 'Memo' ||
-    //         args.column.field === 'Commands'
+    //         args.column.field === 'Commands' ||
+    //         args.column.field === 'DiBuatTgl' ||
+    //         args.column.field === 'DiBuatOleh' ||
+    //         args.column.field === 'DiUbahTgl' ||
+    //         args.column.field === 'DiUbahOleh'
     //         ) {
-    //     if (args.data['Aktif'] == 0) {
+    //        if (args.data['Aktif'] == 0) {
     //           args.cell.classList.add('TidakAktif');
     //       }
     //     }
     //   },
     getBool(x) {
-      // if (x == 1) {
-      //   x = 'true'
-      // }else{
-      //   x = 'false'
-      // }
       return !!String(x).toLowerCase().replace(!!0, "");
-    },
-
-    getKota() {
-      api.get("/search?token=" + this.token).then((res) => {
-        this.namakota = res.data.kota;
-        // console.log(this.namakota)
-        // this.editedItem.Kota = this.namakota[0]
-        // this.defaultItem.Kota = this.namakota[0]
-      });
     },
 
     getData() {
       this.isLoading = true;
-      api.get("/gudangs?token=" + this.token).then(
+      api.get("/mataUangs?token=" + this.token).then(
         (res) => {
           this.isLoading = false;
           let x = [];
           // console.log(res)
-          this.data = res.data;
+          this.DataMataUang = res.data;
           for (let index = 0; index < res.data.length; index++) {
             const element = res.data[index];
             element.Aktif = this.getBool(element.Aktif);
@@ -701,54 +563,9 @@ export default {
         },
         (err) => {
           console.log(err);
-          this.$router.push("/login");
-          localStorage.removeItem("token");
         }
       );
     },
   },
 };
 </script>
-
-<style>
-.e-grid .e-groupdroparea.e-grouped {
-  background-color: rgb(25, 118, 210);
-}
-.e-grid .e-groupheadercell {
-  background-color: rgb(29, 79, 129);
-}
-
-.e-float-input.e-control-wrapper.e-input-group:not(.e-float-icon-left)
-  .e-float-line::after {
-  background: #1976d2;
-}
-
-.e-float-input.e-control-wrapper.e-input-group:not(.e-float-icon-left)
-  .e-float-line::before {
-  background: #1976d2;
-}
-.e-float-input.e-control-wrapper:not(.e-error).e-input-focus
-  input
-  ~ label.e-float-text {
-  color: #1976d2;
-  /* caret-color: #1976D2 im !important; */
-}
-
-label.e-float-text,
-.e-float-input label.e-float-text,
-.e-float-input.e-control-wrapper label.e-float-text,
-.e-float-input:not(.e-input-focus)
-  input:not(:focus):valid
-  ~ label.e-float-text.e-label-bottom,
-.e-float-input.e-control-wrapper:not(.e-input-focus)
-  input:not(:focus):valid
-  ~ label.e-float-text.e-label-bottom {
-  font-size: 16px;
-}
-.e-grid .e-groupdroparea.e-grouped {
-  background-color: rgb(25, 118, 210);
-}
-.e-grid .e-groupheadercell {
-  background-color: rgb(29, 79, 129);
-}
-</style>

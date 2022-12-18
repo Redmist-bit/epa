@@ -489,7 +489,7 @@
                       </v-text-field>
                     </v-col>
 
-                    <v-col cols="12" sm="6" md="4">
+                    <!-- <v-col cols="12" sm="6" md="4">
                       <v-text-field
                         dense
                         clearable
@@ -507,9 +507,9 @@
                         label="NPPKP"
                       >
                       </v-text-field>
-                    </v-col>
+                    </v-col> -->
 
-                    <v-col cols="12" sm="6" md="4">
+                    <!-- <v-col cols="12" sm="6" md="4">
                       <v-menu
                         v-model="MenuTanggalPengukuhan"
                         :close-on-content-click="false"
@@ -534,7 +534,7 @@
                           @input="MenuTanggalPengukuhan = false"
                         ></v-date-picker>
                       </v-menu>
-                    </v-col>
+                    </v-col> -->
 
                     <v-col cols="12" sm="6" md="6">
                       <v-switch dense v-model="editedItem.Aktif" label="Aktif">
@@ -730,15 +730,15 @@
                 width="180"
               ></e-column>
 
-              <e-column field="NPWP" headerText="NPWP" width="180"></e-column>
+              <!-- <e-column field="NPWP" headerText="NPWP" width="180"></e-column>
 
-              <e-column field="NPPKP" headerText="NPPKP" width="180"></e-column>
+              <e-column field="NPPKP" headerText="NPPKP" width="180"></e-column> -->
 
-              <e-column
+              <!-- <e-column
                 field="TglPengukuhan"
                 headerText="TglPengukuhan"
                 width="180"
-              ></e-column>
+              ></e-column> -->
 
               <e-column
                 field="Aktif"
@@ -843,10 +843,10 @@ export default {
         KreditLimit: 0,
         LamaKredit: 0,
         Memo: "",
-        NPWP: "",
-        NPPKP: "",
-        TglPengukuhan: "",
-        Aktif: "",
+        // NPWP: "",
+        // NPPKP: "",
+        // TglPengukuhan: "",
+        Aktif: true,
       },
 
       editedItem: {
@@ -867,9 +867,9 @@ export default {
         KreditLimit: 0,
         LamaKredit: 0,
         Memo: "",
-        NPWP: "",
-        NPPKP: "",
-        TglPengukuhan: "",
+        // NPWP: "",
+        // NPPKP: "",
+        // TglPengukuhan: "",
         Aktif: true,
       },
       dialogSupplier: false,
@@ -943,7 +943,7 @@ export default {
       this.getSupp();
       this.getGrup();
       // console.log('awkowkwok',this.items)
-      this.editedItem.TglPengukuhan = this.date;
+      // this.editedItem.TglPengukuhan = this.date;
     }
 
     if (this.action.some((a) => a == "C")) {
@@ -1347,9 +1347,9 @@ export default {
           KreditLimit: this.editedItem.KreditLimit,
           LamaKredit: this.editedItem.LamaKredit,
           Memo: this.editedItem.Memo,
-          NPWP: this.editedItem.NPWP,
-          NPPKP: this.editedItem.NPPKP,
-          TglPengukuhan: this.editedItem.TglPengukuhan,
+          // NPWP: this.editedItem.NPWP,
+          // NPPKP: this.editedItem.NPPKP,
+          // TglPengukuhan: this.editedItem.TglPengukuhan,
           Aktif: this.editedItem.Aktif,
         })
         .then(() => {
@@ -1395,9 +1395,9 @@ export default {
           KreditLimit: this.editedItem.KreditLimit,
           LamaKredit: this.editedItem.LamaKredit,
           Memo: this.editedItem.Memo,
-          NPWP: this.editedItem.NPWP,
-          NPPKP: this.editedItem.NPPKP,
-          TglPengukuhan: this.editedItem.TglPengukuhan,
+          // NPWP: this.editedItem.NPWP,
+          // NPPKP: this.editedItem.NPPKP,
+          // TglPengukuhan: this.editedItem.TglPengukuhan,
           Aktif: this.editedItem.Aktif,
         })
         .then((res) => {
@@ -1418,9 +1418,9 @@ export default {
           this.KreditLimit = "";
           this.LamaKredit = "";
           this.Memo = "";
-          this.NPWP = "";
-          this.NPPKP = "";
-          this.TglPengukuhan = "";
+          // this.NPWP = "";
+          // this.NPPKP = "";
+          // this.TglPengukuhan = "";
           this.Aktif = "";
           console.log(res);
           // this.getData()
@@ -1454,7 +1454,7 @@ export default {
       // }
       this.editedItem = [];
       // this.countSupplier()
-      this.editedItem.TglPengukuhan = this.date;
+      // this.editedItem.TglPengukuhan = this.date;
       this.editedIndex = -1;
       this.alert = false;
     },
@@ -1507,9 +1507,9 @@ export default {
         this.editedItem.KreditLimit = args.rowData.KreditLimit;
         this.editedItem.LamaKredit = args.rowData.LamaKredit;
         this.editedItem.Memo = args.rowData.Memo;
-        this.editedItem.NPWP = args.rowData.NPWP;
-        this.editedItem.NPPKP = args.rowData.NPPKP;
-        this.editedItem.TglPengukuhan = args.rowData.TglPengukuhan;
+        // this.editedItem.NPWP = args.rowData.NPWP;
+        // this.editedItem.NPPKP = args.rowData.NPPKP;
+        // this.editedItem.TglPengukuhan = args.rowData.TglPengukuhan;
         this.editedItem.Aktif = args.rowData.Aktif;
         this.editedItem.GrupSupplier = this.Grup.find(
           (x) => x.Kode == args.rowData.GrupSupplier

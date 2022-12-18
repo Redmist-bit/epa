@@ -245,7 +245,7 @@
                         label="Memo"
                       ></v-text-field>
                     </v-col>
-                    <v-col cols="12" sm="6" md="6">
+                    <!-- <v-col cols="12" sm="6" md="6">
                       <v-text-field
                         v-model="editedItem.Asuransi"
                         readonly
@@ -352,7 +352,7 @@
                           </v-dialog>
                         </template>
                       </v-text-field>
-                    </v-col>
+                    </v-col> -->
                     <v-col cols="12" sm="6" md="6">
                       <v-text-field
                         v-model="editedItem.BillTo"
@@ -1466,9 +1466,9 @@ export default {
       this.$refs.ggs.ej2Instances.searchSettings.key = "";
       this.isLoading = true;
       let grup = this.Grup.find((x) => x.Nama == this.editedItem.GrupPelanggan);
-      let asuransi = this.asuransi.find(
-        (d) => d.Nama == this.editedItem.Asuransi
-      );
+      // let asuransi = this.asuransi.find(
+      //   (d) => d.Nama == this.editedItem.Asuransi
+      // );
       let BillTo = this.asuransi.find((d) => d.Nama == this.editedItem.BillTo);
       let SellTo = this.asuransi.find((d) => d.Nama == this.editedItem.SellTo);
       api
@@ -1491,7 +1491,7 @@ export default {
           LamaKredit: this.editedItem.LamaKredit,
           CustSince: this.editedItem.CustSince,
           Memo: this.editedItem.Memo,
-          Asuransi: asuransi.Kode,
+          // Asuransi: asuransi.Kode,
           BillTo: BillTo.Kode,
           SellTo: SellTo.Kode,
         })
@@ -1512,12 +1512,12 @@ export default {
       this.isLoading = true;
       // console.log(this.editedItem.Kota)
       let grup = this.Grup.find((x) => x.Nama == this.editedItem.GrupPelanggan);
-      let asuransi = this.asuransi.find(
-        (d) => d.Nama == this.editedItem.Asuransi
-      );
+      // let asuransi = this.asuransi.find(
+      //   (d) => d.Nama == this.editedItem.Asuransi
+      // );
       let BillTo = this.asuransi.find((d) => d.Nama == this.editedItem.BillTo);
       let SellTo = this.asuransi.find((d) => d.Nama == this.editedItem.SellTo);
-      console.log(asuransi);
+      // console.log(asuransi);
       api
         .post("/customers?token=" + this.token, {
           Kode: this.editedItem.Kode,
@@ -1538,7 +1538,7 @@ export default {
           LamaKredit: this.editedItem.LamaKredit,
           CustSince: this.editedItem.CustSince,
           Memo: this.editedItem.Memo,
-          Asuransi: asuransi == undefined ? "" : asuransi.Kode,
+          // Asuransi: asuransi == undefined ? "" : asuransi.Kode,
           BillTo: BillTo == undefined ? "" : BillTo.Kode,
           SellTo: SellTo == undefined ? "" : SellTo.Kode,
         })
@@ -1639,13 +1639,13 @@ export default {
         this.editedItem.BillTo = args.rowData.BillTo;
         this.editedItem.SellTo = args.rowData.SellTo;
         let grup = this.Grup.find((x) => x.Kode == args.rowData.GrupPelanggan);
-        let asuransi = this.asuransi.find(
-          (d) => d.Kode == args.rowData.Asuransi
-        );
+        // let asuransi = this.asuransi.find(
+        //   (d) => d.Kode == args.rowData.Asuransi
+        // );
         let BillTo = this.asuransi.find((d) => d.Kode == args.rowData.BillTo);
         let SellTo = this.asuransi.find((d) => d.Kode == args.rowData.SellTo);
         this.editedItem.GrupPelanggan = grup.Nama;
-        this.editedItem.Asuransi = asuransi.Nama;
+        // this.editedItem.Asuransi = asuransi.Nama;
         this.editedItem.BillTo = BillTo.Nama;
         this.editedItem.SellTo = SellTo.Nama;
         this.dialog = true;

@@ -153,6 +153,64 @@
                       </v-col>
 
                       <v-col cols="12" sm="6" md="6">
+                        <v-menu
+                          v-model="MenuTanggalAwalPayRoll"
+                          :close-on-content-click="false"
+                          :nudge-right="40"
+                          transition="scale-transition"
+                          offset-y
+                          min-width="290px"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
+                              dense
+                              v-model="editedItem.TglAwalPayRoll"
+                              label="Tanggal Awal PayRoll"
+                              prepend-icon="mdi-calendar"
+                              readonly
+                              v-bind="attrs"
+                              v-on="on"
+                            ></v-text-field>
+                          </template>
+                          <v-date-picker
+                            v-model="editedItem.TglAwalPayRoll"
+                            @input="MenuTanggalAwalPayRoll = false"
+                            color="blue darken-4"
+                            locale="id"
+                          ></v-date-picker>
+                        </v-menu>
+                      </v-col>
+
+                      <v-col cols="12" sm="6" md="6">
+                        <v-menu
+                          v-model="MenuTanggalAkhirPayRoll"
+                          :close-on-content-click="false"
+                          :nudge-right="40"
+                          transition="scale-transition"
+                          offset-y
+                          min-width="290px"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
+                              dense
+                              v-model="editedItem.TglAkhirPayRoll"
+                              label="Tanggal Akhir PayRoll"
+                              prepend-icon="mdi-calendar"
+                              readonly
+                              v-bind="attrs"
+                              v-on="on"
+                            ></v-text-field>
+                          </template>
+                          <v-date-picker
+                            v-model="editedItem.TglAkhirPayRoll"
+                            @input="MenuTanggalAkhirPayRoll = false"
+                            color="blue darken-4"
+                            locale="id"
+                          ></v-date-picker>
+                        </v-menu>
+                      </v-col>
+
+                      <v-col cols="12" sm="6" md="6">
                         <v-radio-group
                           class="mt-n3"
                           dense
@@ -276,6 +334,20 @@
 
               <e-column
                 :filter="filter"
+                field="TglAwalPayRoll"
+                headerText="Tanggal Awal PayRoll"
+                width="180"
+              ></e-column>
+
+              <e-column
+                :filter="filter"
+                field="TglAkhirPayRoll"
+                headerText="Tanggal Akhir PayRoll"
+                width="180"
+              ></e-column>
+
+              <e-column
+                :filter="filter"
                 field="Status"
                 headerText="Status"
                 displayAsCheckBox="true"
@@ -370,12 +442,16 @@ export default {
       fullPage: true,
       MenuTanggalAwal: false,
       MenuTanggalAkhir: false,
+      MenuTanggalAwalPayRoll: false,
+      MenuTanggalAkhirPayRoll: false,
       editedIndex: -1,
       defaultItem: {
         Kode: "",
         Nama: "",
         TglAwal: "",
         TglAkhir: "",
+        TglAwalPayRoll: "",
+        TglAkhirPayRoll: "",
         Status: "",
       },
 
@@ -384,6 +460,8 @@ export default {
         Nama: "",
         TglAwal: "",
         TglAkhir: "",
+        TglAwalPayRoll: "",
+        TglAkhirPayRoll: "",
         Status: "",
       },
       dialog: false,
@@ -492,11 +570,11 @@ export default {
     },
 
     getTanggal() {
-      this.editedItem.Nama = moment(this.editedItem.Kode)
+      this.editedItem.Nama = moment(this.editedItem.Kode.toString())
         .locale("id")
         .format("MMMM YYYY");
-      let tahun = this.editedItem.Kode.slice(0, 4);
-      let bulan = this.editedItem.Kode.slice(4);
+      let tahun = this.editedItem.Kode.toString().slice(0, 4);
+      let bulan = this.editedItem.Kode.toString().slice(4);
       let hariAwal =
         "0" +
         new Date(parseInt(tahun), parseInt(bulan) - 1, 1).getDate().toString();
@@ -505,6 +583,8 @@ export default {
         .toString();
       this.editedItem.TglAwal = tahun + "-" + bulan + "-" + hariAwal;
       this.editedItem.TglAkhir = tahun + "-" + bulan + "-" + hariAkhir;
+      this.editedItem.TglAwalPayRoll = tahun + "-" + bulan + "-" + hariAwal;
+      this.editedItem.TglAkhirPayRoll = tahun + "-" + bulan + "-" + hariAkhir;
     },
     rowDataBound: function (args) {
       if (args.data.Status == "0") {
@@ -547,6 +627,8 @@ export default {
           Nama: this.editedItem.Nama,
           TglAwal: this.editedItem.TglAwal,
           TglAkhir: this.editedItem.TglAkhir,
+          TglAwalPayRoll: this.editedItem.TglAwalPayRoll,
+          TglAkhirPayRoll: this.editedItem.TglAkhirPayRoll,
           Status: this.editedItem.Status,
           disable: disablePeriodeId,
           enable: enablePeriodeId,
@@ -564,60 +646,79 @@ export default {
     },
 
     TambahData() {
-      if (this.dataPeriode.length != 0) {
-        if (
-          this.editedItem.Kode >
-          this.dataPeriode[this.dataPeriode.length - 1].Kode
-        ) {
-          var r = confirm(
-            "Periode " +
-              this.editedItem.Nama +
-              " Akan disimpan, Stok akhir periode " +
-              this.dataPeriode[0].Nama +
-              " akan menjadi stok awal periode " +
-              this.editedItem.Nama
-          );
-          if (r == true) {
-            api
-              .post("/periodes?token=" + this.token, {
-                Kode: this.editedItem.Kode,
-                Nama: this.editedItem.Nama,
-                TglAwal: this.editedItem.TglAwal,
-                TglAkhir: this.editedItem.TglAkhir,
-                Status: this.editedItem.Status,
-              })
-              .then(() => {
-                (this.isLoading = false),
-                  // console.log(res)
-                  this.getDataPeriode();
-                this.close();
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          } else {
-            this.isLoading = false;
-          }
-        }
-      } else {
-        api
-          .post("/periodes?token=" + this.token, {
-            Kode: this.editedItem.Kode,
-            Nama: this.editedItem.Nama,
-            TglAwal: this.editedItem.TglAwal,
-            TglAkhir: this.editedItem.TglAkhir,
-            Status: this.editedItem.Status,
-          })
-          .then(() => {
-            (this.isLoading = false),
-              // console.log(res)
-              this.getDataPeriode();
-            this.close();
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
+      // if (this.dataPeriode.length != 0) {
+      //   if (
+      //     this.editedItem.Kode >
+      //     this.dataPeriode[this.dataPeriode.length - 1].Kode
+      //   ) {
+      //     var r = confirm(
+      //       "Periode " +
+      //         this.editedItem.Nama +
+      //         " Akan disimpan, Stok akhir periode " +
+      //         this.dataPeriode[0].Nama +
+      //         " akan menjadi stok awal periode " +
+      //         this.editedItem.Nama
+      //     );
+      //     if (r == true) {
+      //       api
+      //         .post("/periodes?token=" + this.token, {
+      //           Kode: this.editedItem.Kode,
+      //           Nama: this.editedItem.Nama,
+      //           TglAwal: this.editedItem.TglAwal,
+      //           TglAkhir: this.editedItem.TglAkhir,
+      //           TglAwalPayRoll: this.editedItem.TglAwalPayRoll,
+      //           TglAkhirPayRoll: this.editedItem.TglAkhirPayRoll,
+      //           Status: this.editedItem.Status,
+      //         })
+      //         .then(() => {
+      //           (this.isLoading = false),
+      //             // console.log(res)
+      //             this.getDataPeriode();
+      //           this.close();
+      //         })
+      //         .catch((err) => {
+      //           console.log(err);
+      //         });
+      //     } else {
+      //       this.isLoading = false;
+      //     }
+      //   }
+      // } else {
+      //   api
+      //     .post("/periodes?token=" + this.token, {
+      //       Kode: this.editedItem.Kode,
+      //       Nama: this.editedItem.Nama,
+      //       TglAwal: this.editedItem.TglAwal,
+      //       TglAkhir: this.editedItem.TglAkhir,
+      //       Status: this.editedItem.Status,
+      //     })
+      //     .then(() => {
+      //       (this.isLoading = false),
+      //         // console.log(res)
+      //         this.getDataPeriode();
+      //       this.close();
+      //     })
+      //     .catch((err) => {
+      //       console.log(err);
+      //     });
+      // }
+      api
+        .post("/periodes?token=" + this.token, {
+          Kode: this.editedItem.Kode,
+          Nama: this.editedItem.Nama,
+          TglAwal: this.editedItem.TglAwal,
+          TglAkhir: this.editedItem.TglAkhir,
+          Status: this.editedItem.Status,
+        })
+        .then(() => {
+          (this.isLoading = false),
+            // console.log(res)
+            this.getDataPeriode();
+          this.close();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
 
     close() {
@@ -629,6 +730,8 @@ export default {
           this.dataPeriode[0].Kode.substring(4) == 12
             ? parseInt(this.dataPeriode[0].Kode.substring(0, 4)) + 1 + "01"
             : parseInt(this.dataPeriode[0].Kode) + 1;
+        this.editedItem.Kode = this.editedItem.Kode.toString();
+        // console.log(this.editedItem.Kode);
         this.getTanggal();
       });
       this.dialog = false;
@@ -681,9 +784,7 @@ export default {
       api.get("/periodes?token=" + this.token).then(
         (res) => {
           this.isLoading = false;
-          // console.log(res)
           this.dataPeriode = res.data;
-          // console.log('lastKode',this.dataPeriode[0].Kode.substring(0,4))
           this.editedItem.Kode =
             this.dataPeriode[0].Kode.substring(4) == 12
               ? parseInt(this.dataPeriode[0].Kode.substring(0, 4)) + 1 + "01"

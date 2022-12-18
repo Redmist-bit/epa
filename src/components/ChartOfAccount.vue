@@ -350,7 +350,7 @@ export default {
       itemsBadanHukum: ["PT", "CV", "UD", "-"],
       editedIndex: -1,
       defaultItem: {
-        Kode: "",
+        Kode: JSON.parse(localStorage.getItem("user")).Kode.substring(0, 5),
         Nama: "",
         // Deskripsi: "",
         // AccNo: "",
@@ -360,7 +360,7 @@ export default {
         Sifat: "1",
       },
       editedItem: {
-        Kode: "",
+        Kode: JSON.parse(localStorage.getItem("user")).Kode.substring(0, 5),
         Nama: "",
         // Deskripsi: "",
         // AccNo: "",
@@ -405,9 +405,10 @@ export default {
   },
 
   mounted() {
+    // console.log(this.token)
     // check actions
     if (this.action.some((a) => a == "R")) {
-      this.autoTanggal();
+      // this.autoTanggal();
       this.getData();
     }
     if (this.action.some((a) => a == "C")) {
@@ -595,7 +596,7 @@ export default {
     },
 
     close() {
-      this.autoTanggal();
+      // this.autoTanggal();
       this.alert = false;
       this.kota = "";
       this.$nextTick(() => {
@@ -663,19 +664,22 @@ export default {
         })
         .then(
           (res) => {
-            this.data = res.data.map((element) => {
-              return {
-                id: element.id,
-                Kode: element.Kode,
-                Nama: element.Nama,
-                IsDetail: element.IsDetail,
-                Sifat: element.Sifat,
-                Aktif: element.Aktif,
-                Memo: element.Memo,
-                AccNo: element.Kode.substring(5, 13),
-                Deskripsi: element.Nama,
-              };
-            });
+            this.data =
+              res.data == undefined
+                ? []
+                : res.data.map((element) => {
+                    return {
+                      id: element.id,
+                      Kode: element.Kode,
+                      Nama: element.Nama,
+                      IsDetail: element.IsDetail,
+                      Sifat: element.Sifat,
+                      Aktif: element.Aktif,
+                      Memo: element.Memo,
+                      AccNo: element.Kode.substring(5, 13),
+                      Deskripsi: element.Nama,
+                    };
+                  });
             // let x = []
 
             // for (let index = 0; index < res.data.length; index++) {
