@@ -932,11 +932,114 @@
 
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
-                          dense
                           readonly
-                          v-model="editedItem.NomorRangka"
-                          label="Nomor Rangka"
-                        >
+                          v-model="editedItem.Unit"
+                          label="Unit"
+                          dense
+                          ><template v-slot:append>
+                            <v-dialog
+                              v-model="dialogUnit"
+                              max-width="800px"
+                              persistent
+                            >
+                              <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                  dark
+                                  small
+                                  class="mt-n2"
+                                  :disabled="lockedit"
+                                  color="blue darken-4"
+                                  v-bind="attrs"
+                                  v-on="on"
+                                >
+                                  <v-icon>mdi-dots-horizontal</v-icon>
+                                </v-btn>
+                              </template>
+
+                              <v-card>
+                                <v-toolbar
+                                  dark
+                                  outline
+                                  color="blue darken-4"
+                                  class="elevation-1"
+                                >
+                                  <v-card-title>
+                                    <span class="headline"
+                                      >Pilih Unit</span
+                                    >
+                                  </v-card-title>
+                                  <v-spacer></v-spacer>
+
+                                  <v-btn
+                                    dark
+                                    text
+                                    fab
+                                    small
+                                    @click="dialogUnit = false"
+                                  >
+                                    <v-icon class="mx-1"
+                                      >mdi-window-close</v-icon
+                                    >
+                                  </v-btn>
+                                </v-toolbar>
+
+                                <v-col cols="12" md="12">
+                                  <v-card>
+                                    <ejs-grid
+                                      :dataSource="DataUnit"
+                                      height="200"
+                                      width="100%"
+                                      gridLines="Both"
+                                      :allowReordering="true"
+                                      :dataStateChange="dataStateChangeUnit"
+                                      :allowResizing="true"
+                                      :allowPaging="true"
+                                      :pageSettings="pageSettings"
+                                      ref="unit"
+                                      :toolbar="toolbarOptions"
+                                      :recordDoubleClick="onDoubleClickUnit"
+                                    >
+                                      <e-columns>
+                                        <e-column
+                                          field="Kode"
+                                          headerText="Kode"
+                                          textAlign="Left"
+                                          width="200"
+                                        ></e-column>
+                                        <e-column
+                                          field="Nama"
+                                          headerText="Nama"
+                                          width="170"
+                                        ></e-column>
+                                        <e-column
+                                          field="SerialNumber"
+                                          headerText="SerialNumber"
+                                          width="170"
+                                        ></e-column>
+                                        <e-column
+                                          field="CodeUnit"
+                                          headerText="CodeUnit"
+                                          width="150"
+                                        ></e-column>
+                                        <e-column
+                                          field="Product"
+                                          headerText="Product"
+                                          width="150"
+                                        ></e-column>
+                                        <e-column
+                                          field="Brand"
+                                          headerText="Brand"
+                                          width="150"
+                                        ></e-column>
+                                      </e-columns>
+                                    </ejs-grid>
+                                  </v-card>
+                                </v-col>
+
+                                <v-divider></v-divider>
+                              </v-card>
+                            </v-dialog>
+                          </template>
                         </v-text-field>
                       </v-col>
 
@@ -984,7 +1087,7 @@
                           </v-card>
                         </v-dialog>
                         <!-- <v-btn dark color="blue darken-4" @click="dialogPartOrder">Load Part Order</v-btn> -->
-                        <v-btn
+                        <!-- <v-btn
                           color="blue darken-4"
                           dark
                           class="mb-2"
@@ -992,7 +1095,7 @@
                           @click="loadPartOrder"
                         >
                           Load Part Order
-                        </v-btn>
+                        </v-btn> -->
                       </v-col>
 
                       <v-col cols="12">
@@ -1002,9 +1105,11 @@
                           slider-color="blue darken-4"
                         >
                           <v-tab>ITEMS</v-tab>
+                          <v-tab>PEKERJAAN</v-tab>
                           <v-tab-item :eager="true">
                             <!-- @SyncItemBarangPO='rowSelectedBarang' -->
                             <ItemsPurchaseOrder
+                              :dataUnit="DataUnit"
                               v-bind:title="title"
                               v-on:dataGudang="gudang($event)"
                               v-bind:loadRpl="PartOrderList"
@@ -1012,8 +1117,15 @@
                               @hapus_item="hps_items($event)"
                               @itemsPo="items($event)"
                               v-bind:itembarangpo="itembarangpo"
-                              :pembayaran="pembayaran"
-                              :childitembarangpo="childitembarangpo"
+                            />
+                          </v-tab-item>
+                          <v-tab-item :eager="true">
+                            <!-- @SyncItemBarangPO='rowSelectedBarang' -->
+                            <ItemsPurchaseOrderJasa
+                              v-bind:title="title"
+                              @hapus_item="hps_itemsJasa($event)"
+                              @itemsPoJasa="itemsJasa($event)"
+                              v-bind:itemsJasa="itempojasa"
                             />
                           </v-tab-item>
                           <v-divider
@@ -2071,6 +2183,7 @@ import { DatePickerPlugin } from "@syncfusion/ej2-vue-calendars";
 import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
 import ItemsPurchaseOrder from "@/views/PurchaseOrder/items";
+import ItemsPurchaseOrderJasa from "../views/PurchaseOrderJasa/items.vue"
 import {
   GridPlugin,
   ContextMenu,
@@ -2093,10 +2206,13 @@ Vue.use(GridPlugin);
 export default {
   components: {
     ItemsPurchaseOrder,
+    ItemsPurchaseOrderJasa,
     Loading,
   },
   data() {
     return {
+      dialogUnit:false,
+      Unit:[],
       lockedit: false,
       lockeditEta: false,
       alert: false,
@@ -2176,6 +2292,7 @@ export default {
         NomorWO: "",
         NomorRangka: "",
         apply: "",
+        Unit:""
       },
       defaultItem: {
         KodeNota: "",
@@ -2200,8 +2317,10 @@ export default {
         NomorWO: "",
         NomorRangka: "",
         apply: "",
+        Unit:""
       },
       data: [],
+      DataUnit:[],
       totalharga: [],
       stored: [],
       supplier: [],
@@ -2220,6 +2339,7 @@ export default {
       itembaranglist: [],
       storeddata: [],
       itembarangpo: [],
+      itempojasa:[],
       pembayaran: [],
       childitembarangpo: [],
       CodingTerlarang: ["A3", "B3", "C3", "E3", "D3", "T3", "Z"],
@@ -2349,6 +2469,7 @@ export default {
     this.getDataSupplier();
     this.getDataWo(0, 100);
     this.getDataMataUang();
+    this.getDataUnit();
     // this.commands = [...this.commands]
   },
   created() {
@@ -2423,6 +2544,18 @@ export default {
     },
   },
   methods: {
+    getDataUnit() {
+      this.isLoading = true;
+      api.get("unit?token=" + this.token).then(
+        (res) => {
+          this.isLoading = false;
+          this.DataUnit = res.data.data;
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+    },
     UbahSupplier() {
       this.isLoading = true;
       this.editedItem.Supplier = this.supplierAll.find(
@@ -2699,10 +2832,11 @@ export default {
     },
     save() {
       if (this.editedIndex == -1) {
-        if (this.editedItem.NomorWO == "") {
-          this.alert = true;
-          this.pesan = "Nomor WO tidak boleh kosong";
-        } else if (this.editedItem.Supplier == "") {
+        // if (this.editedItem.NomorWO == "") {
+        //   this.alert = true;
+        //   this.pesan = "Nomor WO tidak boleh kosong";
+        // } 
+        if (this.editedItem.Supplier == "") {
           this.alert = true;
           this.pesan = "Supplier tidak boleh kosong";
         } else if (this.editedItem.Kurs === "") {
@@ -2715,8 +2849,14 @@ export default {
           if (this.itembarangpo.length == 0) {
             this.snackbar = true;
           } else {
-            if (parseFloat(this.ReserveOutcome) < this.editedItem.TotalBayar) {
-              alert("Total Bayar Melebihi Budget");
+            if (this.editedItem.NomorWO != "") {
+              if (parseFloat(this.ReserveOutcome) < this.editedItem.TotalBayar) {
+                alert("Total Bayar Melebihi Budget");
+              } else {
+                this.isLoading = true;
+                this.TambahData();
+                this.close();
+              }
             } else {
               this.isLoading = true;
               this.TambahData();
@@ -2733,8 +2873,15 @@ export default {
           this.alert = true;
           this.pesan = "PaymentTerm tidak boleh kosong";
         } else {
-          if (this.editedItem.TotalBayar > parseFloat(this.ReserveOutcome)) {
-            alert("Total Bayar Melebihi Budget");
+          if (this.editedItem.NomorWO != "") {
+            console.log(this.editedItem.NomorWO)
+            if (parseFloat(this.ReserveOutcome) < this.editedItem.TotalBayar) {
+              alert("Total Bayar Melebihi Budget");
+            } else {
+              this.isLoading = true;
+              this.UpdateData();
+              this.close();
+            }
           } else {
             this.isLoading = true;
             this.UpdateData();
@@ -2757,11 +2904,16 @@ export default {
       this.editedItem.SellFrom = this.supplier.find(
         (s) => s.Nama == this.editedItem.SellFrom
       ).Kode;
+      this.editedItem.Unit = this.editedItem.Unit == "" ? "" : this.DataUnit.find(
+        (s) => s.Nama == this.editedItem.Unit
+      ).Kode
+      // console.log(this.editedItem.Unit)
       this.editedItem.items = this.itembarangpo.map((i) => {
         i.Gudang =
           i.Gudang == "" || i.Gudang == null
             ? "0101/0001"
             : this.Gudang.find((g) => g.Nama == i.Gudang).Kode;
+        i.Unit = i.Unit == "" || i.Unit == null ? null : this.DataUnit.find((u) => u.Nama == i.Unit).Kode
         return i;
       });
       api
@@ -2956,8 +3108,11 @@ export default {
               alert("Tidak dapat di ubah karena sudah dibatalkan");
               this.btn_simpan = true;
             }
-            this.ReserveOutcome = res.data.data.wo.ReserveOutcome;
+            if (res.data.data.wo != undefined) {
+              this.ReserveOutcome = res.data.data.wo.ReserveOutcome;
+            }
             this.editedItem = res.data.data;
+            this.editedItem.NomorWO = res.data.data.NomorWO == null ? "" : res.data.data.NomorWO
             this.editedItem.Supplier = res.data.data.supplier.Nama;
             this.editedItem.BillFrom = res.data.data.bill_from.Nama;
             this.editedItem.SellFrom = res.data.data.sell_from.Nama;
@@ -2971,10 +3126,10 @@ export default {
                   (parseFloat(v.Harga) * parseFloat(v.Diskon)) / 100);
               v.Nama = v.barang.Nama;
               v.Merk = v.barang.Merk;
-              v.maxUpdateJumlah =
-                parseInt(v.rpl.Jumlah) -
-                parseInt(v.rpl.TerpenuhiPO) / parseInt(v.Rasio) +
-                v.Jumlah;
+              // v.maxUpdateJumlah =
+              //   parseInt(v.rpl.Jumlah) -
+              //   parseInt(v.rpl.TerpenuhiPO) / parseInt(v.Rasio) +
+              //   v.Jumlah;
               v.TanggalKirim = v.ETA;
               v.PartNumber1 = v.barang.PartNumber1;
               v.Kendaraan = v.barang.Kendaraan;
@@ -3243,6 +3398,13 @@ export default {
       } else {
         alert(args.rowData.KeteranganWIP);
       }
+    },
+    dataStateChangeUnit: function (args) {
+      console.log(args)
+    },
+    onDoubleClickUnit: function (args) {
+      this.editedItem.Unit = args.rowData.Nama
+      this.dialogUnit = false
     },
   },
 };

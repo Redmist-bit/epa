@@ -390,6 +390,8 @@ export default {
             } else {
               alert("email sudah digunakan");
             }
+            this.isLoading = false;
+            this.editedItem = Object.assign({}, this.defaultItem);
           })
           .catch((err) => {
             console.log(err);

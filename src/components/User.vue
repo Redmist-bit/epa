@@ -305,7 +305,7 @@
                       </v-text-field>
                     </v-col>
 
-                    <v-col cols="12" sm="6" md="4">
+                    <!-- <v-col cols="12" sm="6" md="4">
                       <v-text-field
                         dense
                         readonly
@@ -403,7 +403,7 @@
                           </v-dialog>
                         </template>
                       </v-text-field>
-                    </v-col>
+                    </v-col> -->
 
                     <v-col cols="12" sm="6" md="4" class="mt-n3">
                       <v-switch
@@ -832,7 +832,7 @@ export default {
     // chaeck actions
     // if (this.action.some(a => a == 'R')){
     this.getData();
-    this.getDataGudang();
+    // this.getDataGudang();
     //   this.autoTanggal()
     // }
 
@@ -933,10 +933,10 @@ export default {
         }
       );
     },
-    rowSelectedGudang: function (args) {
-      this.editedItem.Gudang = args.rowData.Nama;
-      this.dialog_gudang = false;
-    },
+    // rowSelectedGudang: function (args) {
+    //   this.editedItem.Gudang = args.rowData.Nama;
+    //   this.dialog_gudang = false;
+    // },
     resetPassword() {
       api
         .put("/resetPwd/" + this.id_user + "?token=" + this.token)
@@ -954,21 +954,25 @@ export default {
     },
     save() {
       if (this.editedIndex == -1) {
-        if (this.editedItem.Gudang == "") {
-          this.alert = true;
-          this.pesan = "Gudang tidak boleh kosong";
-        } else {
-          this.isLoading = true;
-          this.TambahData();
-        }
+        // if (this.editedItem.Gudang == "") {
+        //   this.alert = true;
+        //   this.pesan = "Gudang tidak boleh kosong";
+        // } else {
+        //   this.isLoading = true;
+        //   this.TambahData();
+        // }
+        this.isLoading = true;
+        this.TambahData();
       } else {
-        if (this.editedItem.Gudang == "") {
-          this.alert = true;
-          this.pesan = "Gudang tidak boleh kosong";
-        } else {
-          this.isLoading = true;
-          this.UpdateData();
-        }
+        // if (this.editedItem.Gudang == "") {
+        //   this.alert = true;
+        //   this.pesan = "Gudang tidak boleh kosong";
+        // } else {
+        //   this.isLoading = true;
+        //   this.UpdateData();
+        // }
+        this.isLoading = true;
+        this.UpdateData();
       }
     },
     // TambahData(){

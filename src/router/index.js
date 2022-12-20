@@ -172,6 +172,23 @@ const routes = [
       auth: true,
     },
   },
+  {
+    path: "/JobOrder",
+    name: "JobOrder",
+    component: () =>
+      import(/* webpackChunkName: "JobOrder" */ "../components/WorkOrder.vue"),
+    meta: {
+      auth: true,
+    },
+  },
+  {
+    path: '/PurchaseOrderJasa',
+    name: 'PurchaseOrderJasa',
+    component: () => import(/* webpackChunkName: "PurchaseOrderJasa" */ '../components/PurchaseOrderJasa.vue'),
+    meta: {
+      auth: true,
+    },
+  },
 ];
 
 const router = new VueRouter({

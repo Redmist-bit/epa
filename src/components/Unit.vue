@@ -30,7 +30,7 @@
           <v-dialog
             v-model="dialogUnit"
             scrollable
-            max-width="400px"
+            max-width="600px"
             persistent
           >
             <template v-slot:activator="{ on, attrs }">
@@ -176,106 +176,108 @@
                           v-model="editedItem.Supplier"
                           label="Supplier"
                         >
-                            <template v-slot:append>
-                                <v-dialog
-                                    v-model="dialogSupplier"
-                                    scrollable
-                                    max-width="900px"
-                                    persistent
+                          <template v-slot:append>
+                            <v-dialog
+                              v-model="dialogSupplier"
+                              scrollable
+                              max-width="900px"
+                              persistent
+                            >
+                              <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                  dark
+                                  small
+                                  class="mt-n2"
+                                  color="blue darken-4"
+                                  v-bind="attrs"
+                                  v-on="on"
                                 >
-                                    <template v-slot:activator="{ on, attrs }">
-                                        <v-btn
-                                            dark
-                                            small
-                                            class="mt-n2"
-                                            color="blue darken-4"
-                                            v-bind="attrs"
-                                            v-on="on"
-                                        >
-                                            <v-icon>mdi-dots-horizontal</v-icon>
-                                        </v-btn>
-                                        </template>
-                                        <v-card>
-                                        <v-toolbar
-                                            dark
-                                            outline
-                                            color="blue darken-4"
-                                            class="elevation-0"
-                                        >
-                                            <v-spacer></v-spacer>
-                                            <v-btn
-                                            dark
-                                            text
-                                            fab
-                                            small
-                                            @click="dialogSupplier = false"
-                                            >
-                                            <v-icon class="mx-1">mdi-window-close</v-icon>
-                                            </v-btn>
-                                        </v-toolbar>
-                                        <v-card flat>
-                                            <v-col cols="12" md="12">
-                                            <v-card>
-                                                <ejs-grid
-                                                :dataSource="supplier"
-                                                height="200"
-                                                width="100%"
-                                                gridLines="Both"
-                                                :allowReordering="true"
-                                                :allowSorting="true"
-                                                :allowMultiSorting="true"
-                                                :allowFiltering="true"
-                                                :filterSettings="filterOptions"
-                                                :allowResizing="true"
-                                                :allowPaging="true"
-                                                :toolbar="toolbarOptions"
-                                                :recordDoubleClick="rowSelectedSupplier"
-                                                >
-                                                <e-columns>
-                                                    <e-column
-                                                    field="Kode"
-                                                    headerText="Kode"
-                                                    textAlign="Left"
-                                                    width="180"
-                                                    ></e-column>
-                                                    <e-column
-                                                    field="Nama"
-                                                    headerText="Nama"
-                                                    width="180"
-                                                    ></e-column>
-                                                    <e-column
-                                                    field="BadanHukum"
-                                                    headerText="Badan Hukum"
-                                                    width="180"
-                                                    ></e-column>
-                                                    <e-column
-                                                    field="Kota"
-                                                    headerText="Kota"
-                                                    width="180"
-                                                    ></e-column>
-                                                    <e-column
-                                                    field="Alamat"
-                                                    headerText="Alamat"
-                                                    width="180"
-                                                    ></e-column>
-                                                    <e-column
-                                                    field="Telp"
-                                                    headerText="Telp"
-                                                    width="180"
-                                                    ></e-column>
-                                                    <e-column
-                                                    field="ContactPerson"
-                                                    headerText="Contact Person"
-                                                    width="180"
-                                                    ></e-column>
-                                                </e-columns>
-                                                </ejs-grid>
-                                            </v-card>
-                                            </v-col>
-                                        </v-card>
-                                        </v-card>
-                                </v-dialog>
-                            </template>
+                                  <v-icon>mdi-dots-horizontal</v-icon>
+                                </v-btn>
+                              </template>
+                              <v-card>
+                                <v-toolbar
+                                  dark
+                                  outline
+                                  color="blue darken-4"
+                                  class="elevation-0"
+                                >
+                                  <v-spacer></v-spacer>
+                                  <v-btn
+                                    dark
+                                    text
+                                    fab
+                                    small
+                                    @click="dialogSupplier = false"
+                                  >
+                                    <v-icon class="mx-1"
+                                      >mdi-window-close</v-icon
+                                    >
+                                  </v-btn>
+                                </v-toolbar>
+                                <v-card flat>
+                                  <v-col cols="12" md="12">
+                                    <v-card>
+                                      <ejs-grid
+                                        :dataSource="supplier"
+                                        height="200"
+                                        width="100%"
+                                        gridLines="Both"
+                                        :allowReordering="true"
+                                        :allowSorting="true"
+                                        :allowMultiSorting="true"
+                                        :allowFiltering="true"
+                                        :filterSettings="filterOptions"
+                                        :allowResizing="true"
+                                        :allowPaging="true"
+                                        :toolbar="toolbarOptions"
+                                        :recordDoubleClick="rowSelectedSupplier"
+                                      >
+                                        <e-columns>
+                                          <e-column
+                                            field="Kode"
+                                            headerText="Kode"
+                                            textAlign="Left"
+                                            width="180"
+                                          ></e-column>
+                                          <e-column
+                                            field="Nama"
+                                            headerText="Nama"
+                                            width="180"
+                                          ></e-column>
+                                          <e-column
+                                            field="BadanHukum"
+                                            headerText="Badan Hukum"
+                                            width="180"
+                                          ></e-column>
+                                          <e-column
+                                            field="Kota"
+                                            headerText="Kota"
+                                            width="180"
+                                          ></e-column>
+                                          <e-column
+                                            field="Alamat"
+                                            headerText="Alamat"
+                                            width="180"
+                                          ></e-column>
+                                          <e-column
+                                            field="Telp"
+                                            headerText="Telp"
+                                            width="180"
+                                          ></e-column>
+                                          <e-column
+                                            field="ContactPerson"
+                                            headerText="Contact Person"
+                                            width="180"
+                                          ></e-column>
+                                        </e-columns>
+                                      </ejs-grid>
+                                    </v-card>
+                                  </v-col>
+                                </v-card>
+                              </v-card>
+                            </v-dialog>
+                          </template>
                         </v-text-field>
                       </v-col>
 
@@ -470,10 +472,10 @@ export default {
   },
   data() {
     return {
-      supplier:[],
-      dialogSupplier:false,
+      supplier: [],
+      dialogSupplier: false,
       pesan: "",
-      MenuTanggalAwal:false,
+      MenuTanggalAwal: false,
       alert: "",
       ScrollKeAtas: false,
       mobile: null,
@@ -554,7 +556,7 @@ export default {
         },
       });
     }
-    this.getSupplier()
+    this.getSupplier();
   },
   created() {
     // get actions for this page
@@ -589,13 +591,13 @@ export default {
   },
   methods: {
     rowSelectedSupplier: function (args) {
-        this.editedItem.Supplier = args.rowData.Nama;
-        this.dialogSupplier = false;
+      this.editedItem.Supplier = args.rowData.Nama;
+      this.dialogSupplier = false;
     },
     getSupplier() {
-        api.get("chunk-supplier?token=" + this.token).then((res) => {
-            this.supplier = res.data.data.filter((p) => p.Aktif == "1");
-        });
+      api.get("chunk-supplier?token=" + this.token).then((res) => {
+        this.supplier = res.data.data.filter((p) => p.Aktif == "1");
+      });
     },
     onScroll(e) {
       if (typeof window === "undefined") return;
@@ -633,7 +635,11 @@ export default {
       }
     },
     TambahData() {
-        this.editedItem.Supplier = this.supplier.find(s => s.Nama == this.editedItem.Supplier).Kode
+      if (this.editedItem.Supplier != "") {
+        this.editedItem.Supplier = this.supplier.find(
+          (s) => s.Nama == this.editedItem.Supplier
+        ).Kode;
+      }
       api
         .post("unit?token=" + this.token, this.editedItem)
         .then(() => {
@@ -646,7 +652,11 @@ export default {
         });
     },
     UpdateData() {
-        this.editedItem.Supplier = this.supplier.find(s => s.Nama == this.editedItem.Supplier).Kode
+      if (this.editedItem.Supplier != "") {
+        this.editedItem.Supplier = this.supplier.find(
+          (s) => s.Nama == this.editedItem.Supplier
+        ).Kode;
+      }
       api
         .put(
           "unit/" + this.editedItem.id + "?token=" + this.token,
@@ -693,7 +703,8 @@ export default {
         this.editedItem.Type = args.rowData.Type;
         this.editedItem.CodeUnit = args.rowData.CodeUnit;
         this.editedItem.TanggalPembelian = args.rowData.TanggalPembelian;
-        this.editedItem.Supplier = args.rowData.supplier.Nama;
+        this.editedItem.Supplier =
+          args.rowData.supplier === null ? "" : args.rowData.supplier.Nama;
         this.editedItem.Memo = args.rowData.Memo;
         this.editedItem.id = args.rowData.id;
         this.dialogUnit = true;

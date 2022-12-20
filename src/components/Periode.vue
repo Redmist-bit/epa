@@ -596,7 +596,7 @@ export default {
         if (this.editedItem.Kode == "") {
           this.alert = true;
           this.pesan = "Kode Periode tidak boleh kosong";
-        } else if (this.editedItem.Kode.length != 6) {
+        } else if (this.editedItem.Kode.toString().length != 6) {
           this.alert = true;
           this.pesan =
             "Format Kode Periode 'YYYYMM',contoh: " + this.dataPeriode[0].Kode;

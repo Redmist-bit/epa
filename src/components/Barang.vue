@@ -1061,7 +1061,7 @@ export default {
       // }
     },
     TambahData() {
-      let gudang = this.gudang.find((d) => (d.Nama = this.editedItem.Gudang));
+      // let gudang = this.gudang.find((d) => (d.Nama = this.editedItem.Gudang));
       api
         .post("/barangs?token=" + this.token, {
           Kode: this.editedItem.Kode,
@@ -1074,7 +1074,7 @@ export default {
           KodeSupplier: this.editedItem.KodeSupplier,
           Dimensi: this.editedItem.Dimensi,
           Aktif: this.editedItem.Aktif,
-          Gudang: gudang.Kode,
+          Gudang: this.editedItem.Gudang,
           Memo: this.editedItem.Memo,
           satuan: this.itemtabsatuan,
           StokLimit: {
@@ -1168,8 +1168,10 @@ export default {
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
-        this.editedItem.Gudang = this.gudang[0].Nama;
-        this.defaultItem.Gudang = this.gudang[0].Nama;
+        // this.editedItem.Gudang = this.gudang[0].Nama;
+        // this.defaultItem.Gudang = this.gudang[0].Nama;
+        [...this.gudang]
+        console.log(this.gudang)
       });
       this.dialog = false;
       this.alert = false;

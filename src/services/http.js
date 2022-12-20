@@ -10,6 +10,7 @@ if (process.env.NODE_ENV == "production") {
   }
 } else {
   axios.defaults.baseURL = "http://localhost:8000/api";
+  // axios.defaults.baseURL = "http://serverweb/epab/server.php/api"
 }
 
 export default axios.create({

@@ -251,12 +251,14 @@ export default {
                   this.credentials.Nama +
                   " bukan user EPA"
               );
+              this.isLoading = false;
+            } else {
+              localStorage.setItem("token", res.data.token);
+              this.infoPerusahaan(res.data.token);
+              localStorage.setItem("user", JSON.stringify(res.data.user));
+              this.$router.push("/Dashboard");
+              location.reload();
             }
-            localStorage.setItem("token", res.data.token);
-            this.infoPerusahaan(res.data.token);
-            localStorage.setItem("user", JSON.stringify(res.data.user));
-            this.$router.push("/Dashboard");
-            location.reload();
           }
         })
         .catch((err) => {

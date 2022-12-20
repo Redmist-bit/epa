@@ -1,131 +1,126 @@
 <template>
   <v-col cols="12" md="12">
-    <!-- <v-toolbar
-    flat
-    dark
-    dense
-    outlined
-    color="white"
-    class="elevation-5"
-  > 
-    <v-dialog v-model="dialogbarang" max-width="1000px" persistent>
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn
-          dark
-          class="mx-n2"
-          color="blue darken-4"
-          v-bind="attrs"
-          v-on="on" >
-          <v-icon>mdi-plus</v-icon>
-          Tambah
-        </v-btn>
-      </template>
-      <v-card>
-        <v-toolbar
-          dark
-          outline
-          color="blue darken-4"
-          class="elevation-0"
-          >
-        <v-card-title>
-          <span class="headline">{{ formTitleItemsbarang }}</span>
-        </v-card-title>
-        <v-spacer></v-spacer>
+    <v-toolbar flat dark dense outlined color="white" class="elevation-5">
+      <v-dialog v-model="dialogbarang" max-width="1000px" persistent>
+        <template v-slot:activator="{ on, attrs }">
           <v-btn
             dark
-            text
-            fab
-            small
-            @click="closeDialogPilihItems">
-            <v-icon class="mx-1">mdi-window-close</v-icon>
+            class="mx-n2"
+            color="blue darken-4"
+            v-bind="attrs"
+            v-on="on"
+          >
+            <v-icon>mdi-plus</v-icon>
+            Tambah
           </v-btn>
-        </v-toolbar>
-        <v-col cols="12" md="12">
-          <v-card>
-            <ejs-grid 
-            id="Grid"
-            ref='ggs' 
-            :dataSource="dataBarang" height='200' width='100%'
-            :allowReordering = true
-            :selectionSettings='selectionOptions'
-            :allowResizing='true'
-            :allowPaging='true'
-            :toolbar="toolbarOptions"
-            :pageSettings='pageSettings'
-            :rowSelected="rowSelectedBarang"
-            :dataStateChange='dataStateChange'
-            >
-            <e-columns>
-                <e-column 
-                  fieldText=''
-                  field='Kode' 
-                  headerText='Kode' 
-                  textAlign='Left'
-                  width=180
+        </template>
+        <v-card>
+          <v-toolbar dark outline color="blue darken-4" class="elevation-0">
+            <v-card-title>
+              <span class="headline">{{ formTitleItemsbarang }}</span>
+            </v-card-title>
+            <v-spacer></v-spacer>
+            <v-btn dark text fab small @click="closeDialogPilihItems">
+              <v-icon class="mx-1">mdi-window-close</v-icon>
+            </v-btn>
+          </v-toolbar>
+          <v-col cols="12" md="12">
+            <v-card>
+              <!-- <v-row>
+                <v-col cols="12" md="6">
+                  <v-text-field
+                    dense
+                    v-model="Unit"
+                    readonly
+                    label="Unit"
                   >
-                </e-column>
+                  </v-text-field>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field
+                    dense
+                    v-model="Site"
+                    readonly
+                    label="Site"
+                  >
+                  </v-text-field>
+                </v-col>
+              </v-row> -->
+              <ejs-grid
+                id="Grid"
+                ref="ggs"
+                :dataSource="dataBarang"
+                height="200"
+                width="100%"
+                :allowReordering="true"
+                :selectionSettings="selectionOptions"
+                :allowResizing="true"
+                :allowPaging="true"
+                :toolbar="toolbarOptions"
+                :pageSettings="pageSettings"
+                :rowSelected="rowSelectedBarang"
+                :dataStateChange="dataStateChange"
+              >
+                <e-columns>
+                  <e-column
+                    fieldText=""
+                    field="Kode"
+                    headerText="Kode"
+                    textAlign="Left"
+                    width="180"
+                  >
+                  </e-column>
+
+                  <e-column field="Nama" headerText="Nama" width="250">
+                  </e-column>
 
                   <e-column
-                  field='Nama'
-                  headerText='Nama'
-                  width=250
+                    :filter="filter"
+                    field="Merk"
+                    headerText="Merk"
+                    width="130"
                   >
-                </e-column>
+                  </e-column>
 
-                <e-column
-                  :filter='filter'
-                  field='Merk'  
-                  headerText='Merk' 
-                  width=130
+                  <e-column
+                    field="PartNumber1"
+                    headerText="Part Number 1"
+                    width="170"
                   >
-                </e-column>
+                  </e-column>
 
-                <e-column
-                  field='PartNumber1'
-                  headerText='Part Number 1'
-                  width=170
+                  <e-column
+                    field="Kendaraan"
+                    headerText="Kendaraan"
+                    width="170"
                   >
-                </e-column>
+                  </e-column>
 
-                <e-column
-                  field='Kendaraan'
-                  headerText='Kendaraan'
-                  width=170
-                >
-                </e-column>
+                  <e-column field="Satuan" headerText="Satuan" width="170">
+                  </e-column>
 
-                <e-column
-                  field='Satuan'
-                  headerText='Satuan'
-                  width=170
-                >
-                </e-column>
+                  <e-column
+                    field="Harga"
+                    headerText="HargaJualDefault"
+                    width="170"
+                  >
+                  </e-column>
+                </e-columns>
+              </ejs-grid>
+            </v-card>
+          </v-col>
 
-                <e-column
-                  field='Harga'
-                  headerText='HargaJualDefault'
-                  width=170
-                >
-                </e-column>
-              </e-columns>
-            </ejs-grid>
-          </v-card>
-        </v-col>
+          <v-divider></v-divider>
 
-        <v-divider></v-divider>
-
-        <v-card-actions>
+          <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn
-              dark
-              color="blue darken-4"
-              @click="accbarang">
+            <v-btn dark color="blue darken-4" @click="accbarang">
               <v-icon class="mr-1">mdi-content-save</v-icon>Simpan
             </v-btn>
           </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </v-toolbar> -->
+        </v-card>
+      </v-dialog>
+    </v-toolbar>
     <v-card color="grey lighten-3" class="pa-2 rounded-lg elevation-0">
       <ejs-grid
         :dataSource="childitembarangpo"
@@ -193,14 +188,18 @@
             width="170"
           ></e-column>
 
-          <e-column
+          <e-column :edit="dropdownUnit" field="Unit" headerText="Unit" width="170"></e-column>
+
+          <e-column field="Site" :edit="dropdownSite" headerText="Site" width="170"></e-column>
+
+          <!-- <e-column
             field="TanggalKirim"
             headerText="ETA"
             format="dd/MM/yyyy"
             editType="datepickeredit"
             type="date"
             width="170"
-          ></e-column>
+          ></e-column> -->
 
           <e-column
             field="Jumlah"
@@ -284,10 +283,10 @@ import {
   Reorder,
 } from "@syncfusion/ej2-vue-grids";
 import { DropDownList } from "@syncfusion/ej2-dropdowns";
-let elementGudang, GudangObj;
+let elementGudang, GudangObj,elementUnit,UnitObj,elementSite,SiteObj;
 import { DatePickerPlugin } from "@syncfusion/ej2-vue-calendars";
 // let gudangnya = [
-//   { Gudang: "GUDANG TA 1"},
+//   { Gudang: "GUDANG EPA"},
 //   { Gudang: "DEPO 1"},
 //   { Gudang: "DEPO 2"},
 // ];
@@ -295,12 +294,22 @@ Vue.use(GridPlugin);
 Vue.use(DatePickerPlugin);
 export default {
   props: {
+    dataUnit: Array,
     loadRpl: Array,
     title: String,
     itembarangpo: Array,
   },
   data() {
     return {
+      dataSite:[
+        {Site:'HO'},
+        {Site:'BERAU'},
+        {Site:'PALEMBANG'},
+        {Site:'SUNGAI DANAU'},
+        {Site:'TABANG'},
+        {Site:'MOROWALI'},
+        {Site:'PALU'}
+      ],
       dropdownGudang: {
         create: () => {
           elementGudang = document.createElement("input");
@@ -318,7 +327,7 @@ export default {
               dataSource: this.dataGudang,
               fields: { value: "Kode", text: "Nama" },
               value: w.rowData.Kode,
-              text: w.rowData.Nama,
+              text: w.rowData.Gudang,
               change: (d) => {
                 console.log("d gada isi", d);
               },
@@ -330,7 +339,7 @@ export default {
               dataSource: this.dataGudang,
               fields: { value: "Kode", text: "Nama" },
               value: w.rowData.Kode,
-              text: w.rowData.Nama,
+              text: w.rowData.Gudang,
               change: (d) => {
                 console.log("d", d);
               },
@@ -341,20 +350,102 @@ export default {
           GudangObj.appendTo(elementGudang);
         },
       },
+      dropdownUnit: {
+        create: () => {
+          elementUnit = document.createElement("input");
+          return elementUnit;
+        },
+        read: () => {
+          return UnitObj.text;
+        },
+        destroy: () => {
+          UnitObj.destroy();
+        },
+        write: (w) => {
+          if (w.rowData.Unit != null || w.rowData.Unit != "") {
+            UnitObj = new DropDownList({
+              dataSource: this.dataUnit,
+              fields: { value: "Kode", text: "Nama" },
+              value: w.rowData.Kode,
+              text: w.rowData.Unit,
+              change: (d) => {
+                console.log("d gada isi", d);
+              },
+              placeholder: "Select a Unit",
+              floatLabelType: "Never",
+            });
+          } else {
+            UnitObj = new DropDownList({
+              dataSource: this.dataUnit,
+              fields: { value: "Kode", text: "Nama" },
+              value: w.rowData.Kode,
+              text: w.rowData.Unit,
+              change: (d) => {
+                console.log("d", d);
+              },
+              placeholder: "Select a Unit",
+              floatLabelType: "Never",
+            });
+          }
+          UnitObj.appendTo(elementUnit);
+        },
+      },
+      dropdownSite: {
+        create: () => {
+          elementSite = document.createElement("input");
+          return elementSite;
+        },
+        read: () => {
+          return SiteObj.text;
+        },
+        destroy: () => {
+          SiteObj.destroy();
+        },
+        write: (w) => {
+          if (w.rowData.Site != null || w.rowData.Site != "") {
+            SiteObj = new DropDownList({
+              dataSource: this.dataSite,
+              fields: { value: "Site", text: "Site" },
+              value: w.rowData.Site,
+              text: w.rowData.Site,
+              change: (d) => {
+                console.log("d gada isi", d);
+              },
+              placeholder: "Select a Site",
+              floatLabelType: "Never",
+            });
+          } else {
+            SiteObj = new DropDownList({
+              dataSource: this.dataSite,
+              fields: { value: "Site", text: "Site" },
+              value: w.rowData.Site,
+              text: w.rowData.Site,
+              change: (d) => {
+                console.log("d", d);
+              },
+              placeholder: "Select a Site",
+              floatLabelType: "Never",
+            });
+          }
+          SiteObj.appendTo(elementSite);
+        },
+      },
       TotalBayar: "",
       DPp: "",
       PPn: "",
+      Unit:"",
+      Site:"",
       childpembayaran: [],
       hapus_items: [],
       gudang: "",
       ppnPersen: 0,
       JumlahRules: {
         required: true,
-        min: 0,
-        max: [
-          this.customValidationFn,
-          "Tidak Boleh Lebih dari Permintaan saat RPL",
-        ],
+        min: 1,
+        // max: [
+        //   this.customValidationFn,
+        //   "Tidak Boleh Lebih dari Permintaan saat RPL",
+        // ],
       },
       dialogbarang: false,
       dialogPartOrder: false,
@@ -452,12 +543,12 @@ export default {
         this.childitembarangpo = [];
         this.hapus_items = [];
         this.childitembarangpo = [...this.childitembarangpo];
-        this.JumlahRules.max[1] = "Tidak Boleh Lebih dari Permintaan saat RPL";
+        // this.JumlahRules.max[1] = "Tidak Boleh Lebih dari Permintaan saat RPL";
       }
-      if (ket == "Ubah") {
-        this.JumlahRules.max[1] =
-          "Tidak Boleh Lebih dari Permintaan saat RPL / Tidak Boleh Kurang dari receive pembelian";
-      }
+      // if (ket == "Ubah") {
+      //   this.JumlahRules.max[1] =
+      //     "Tidak Boleh Lebih dari Permintaan saat RPL / Tidak Boleh Kurang dari receive pembelian";
+      // }
     },
     loadRpl(val) {
       // console.log('di anak', val)
@@ -522,16 +613,16 @@ export default {
     onActionComplete(args) {
       // console.log(args)
       if (args.requestType === "beginEdit") {
-        this.sisaRpl = args.rowData.JumlahSisa;
+        // this.sisaRpl = args.rowData.JumlahSisa;
         // console.log(this.sisaRpl)
-        if (this.title == "Ubah") {
-          // this.JumlahRules.max[1] = 'rrr'
-          // console.log(this.JumlahRules)
-          this.Terpenuhi = args.rowData.Terpenuhi;
-          // this.sisaRpl = args.rowData.rpl.Jumlah - args.rowData.Jumlah
-          // this.maxUpdateJumlah = args.rowData.rpl.Jumlah - parseInt(args.rowData.rpl.TerpenuhiPO) + parseInt(args.rowData.Jumlah)
-          this.maxUpdateJumlah = args.rowData.maxUpdateJumlah;
-        }
+        // if (this.title == "Ubah") {
+        //   // this.JumlahRules.max[1] = 'rrr'
+        //   // console.log(this.JumlahRules)
+        //   this.Terpenuhi = args.rowData.Terpenuhi;
+        //   // this.sisaRpl = args.rowData.rpl.Jumlah - args.rowData.Jumlah
+        //   // this.maxUpdateJumlah = args.rowData.rpl.Jumlah - parseInt(args.rowData.rpl.TerpenuhiPO) + parseInt(args.rowData.Jumlah)
+        //   this.maxUpdateJumlah = args.rowData.maxUpdateJumlah;
+        // }
         // console.log(args)
         // console.log(this.sisaRpl)
         if (args.form.elements.namedItem(this.setFocus.field) != null) {
@@ -571,89 +662,7 @@ export default {
       // this.storeSelect = args.data
       this.storeSelect = this.$refs.ggs.ej2Instances.getSelectedRecords();
     },
-    doubleClickBarang: function () {
-      // console.log(args)
-      this.dialogbarang = false;
-      this.childitembarangpo = [...this.childitembarangpo];
-      if (this.childitembarangpo.length > 0) {
-        // console.log('adagaksih',this.childitembarangpo)
-        // const dataNow = this.childitembarangpo
-        for (let i = 0; i < this.storeSelect.length; i++) {
-          const element = this.storeSelect[i];
-          // console.log('yg dipilih', element)
-          let result = this.childitembarangpo.findIndex(
-            (o) => o.barang.Kode == element.barang.Kode
-          );
-          // Cek barang sdh ada apa belum
-          if (result != -1) {
-            this.childitembarangpo[result].jumlah += 1;
-            let diskonRp =
-              (parseInt(this.childitembarangpo[result].diskon1) *
-                parseInt(this.childitembarangpo[result].harga)) /
-              100;
-            this.childitembarangpo[result].subtotal =
-              this.childitembarangpo[result].jumlah *
-              (this.childitembarangpo[result].harga - diskonRp);
-          } else {
-            element.barang = {
-              Kode: element.Kode,
-              Nama: element.Nama,
-              PartNumber1: element.PartNumber1,
-              Merk: element.Merk,
-              Kendaraan: element.Kendaraan,
-            };
-            element.gudang = element.Gudang;
-            element.keterangan = "";
-            element.jumlah = 1;
-            element.satuan =
-              typeof element.satuan === "object"
-                ? element.satuan[0].NamaSatuan
-                : "PCS";
-            element.harga =
-              typeof element.hrgbeli === "object"
-                ? element.hrgbeli[0].Harga
-                : 0;
-            element.diskon1 = 0;
-            element.subtotal =
-              typeof element.hrgbeli === "object"
-                ? element.hrgbeli[0].Harga
-                : 0;
 
-            this.childitembarangpo.push(element);
-            // console.log(this.childitembarangpo)
-          }
-        }
-      } else {
-        for (let i = 0; i < this.storeSelect.length; i++) {
-          const element = this.storeSelect[i];
-          element.barang = {
-            Kode: element.Kode,
-            Nama: element.Nama,
-            PartNumber1: element.PartNumber1,
-            Merk: element.Merk,
-            Kendaraan: element.Kendaraan,
-          };
-          element.gudang = element.Gudang;
-          element.keterangan = "";
-          element.jumlah = 1;
-          element.satuan =
-            typeof element.satuan === "object"
-              ? element.satuan[0].NamaSatuan
-              : "PCS";
-          // element.satuan = (element.satuan.length != 0 && element.satuan != undefined && element.satuan != null) ? element.satuan[0].NamaSatuan : "PCS"
-          element.harga =
-            typeof element.hrgbeli === "object" ? element.hrgbeli[0].Harga : 0;
-          element.diskon1 = 0;
-          element.subtotal =
-            typeof element.hrgbeli === "object" ? element.hrgbeli[0].Harga : 0;
-
-          this.childitembarangpo.push(element);
-          // console.log(this.childitembarangpo)
-        }
-      }
-      this.childitembarangpo = [...this.childitembarangpo];
-      document.getElementById("Grid").ej2_instances[0].refresh();
-    },
     //simpan barang dari list
     accbarang() {
       this.childitembarangpo = [...this.childitembarangpo];
@@ -675,8 +684,9 @@ export default {
               );
             } else {
               data.Jumlah = 1;
-              data.Gudang = "GUDANG TA 1";
+              data.Gudang = "GUDANG EPA";
               data.Barang = data.Kode;
+              console.log(data.Harga)
               data.Harga = data.Harga == null ? 0 : data.Harga;
               data.Diskon = 0;
               data.DiskonRp = 0;
@@ -705,7 +715,7 @@ export default {
             this.storeSelect.Harga =
               this.storeSelect.Harga == null ? 0 : this.storeSelect.Harga;
             this.storeSelect.Diskon = 0;
-            this.storeSelect.Gudang = "GUDANG TA 1";
+            this.storeSelect.Gudang = "GUDANG EPA";
             this.storeSelect.DiskonRp = 0;
             this.storeSelect.SubTotal =
               this.storeSelect.Harga == null ? 0 : this.storeSelect.Harga;
@@ -714,21 +724,23 @@ export default {
         }
       } else {
         if (this.storeSelect.length != undefined) {
+          // console.log('disini')
           this.storeSelect.forEach((e) => {
             const data = e;
             data.Barang = data.Kode;
             data.Harga = data.Harga == null ? 0 : data.Harga;
             data.Diskon = 0;
-            data.Gudang = "GUDANG TA 1";
+            data.Gudang = "GUDANG EPA";
             data.DiskonRp = 0;
             data.SubTotal = data.Harga == null ? 0 : data.Harga;
             data.Jumlah = 1;
             this.childitembarangpo.push(data);
           });
         } else {
+          // console.log('disini')
           this.storeSelect.Barang = this.storeSelect.Kode;
           this.storeSelect.Jumlah = 1;
-          this.storeSelect.Gudang = "GUDANG TA 1";
+          this.storeSelect.Gudang = "GUDANG EPA";
           this.storeSelect.Harga =
             this.storeSelect.Harga == null ? 0 : this.storeSelect.Harga;
           this.storeSelect.Diskon = 0;
@@ -738,6 +750,7 @@ export default {
           this.childitembarangpo.push(this.storeSelect);
         }
       }
+      // console.log(this.childitembarangpo)
       this.childitembarangpo = [...this.childitembarangpo];
       this.dialogbarang = false;
     },
@@ -773,7 +786,13 @@ export default {
         )
         .then(
           (res) => {
-            this.dataBarang = res.data;
+            this.dataBarang = {
+              result: res.data.result.map((p) => {
+                p.Harga = p.Harga == null ? 0 : parseFloat(p.Harga);
+                return p;
+              }),
+              count: res.data.count,
+            };
           },
           (err) => {
             console.log(err);
