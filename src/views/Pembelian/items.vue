@@ -197,7 +197,12 @@
             width="170"
           >
           </e-column>
-
+          <e-column
+            field="Keterangan"
+            headerText="Keterangan"
+            width="170"
+          >
+          </e-column>
           <e-column
             field="Jumlah"
             headerText="Jumlah"
@@ -383,7 +388,7 @@ export default {
               dataSource: this.gudang,
               fields: { value: "Kode", text: "Nama" },
               value: w.rowData.Kode,
-              text: w.rowData.Nama,
+              text: w.rowData.Gudang,
               change: (d) => {
                 console.log("d gada isi", d);
               },
@@ -395,7 +400,7 @@ export default {
               dataSource: this.gudang,
               fields: { value: "Kode", text: "Nama" },
               value: w.rowData.Kode,
-              text: w.rowData.gudang_asal,
+              text: w.rowData.Gudang,
               change: (d) => {
                 console.log("d", d);
               },
@@ -544,8 +549,6 @@ export default {
         this.sisaPo = args.rowData.JumlahSisa;
         if (this.title == "Ubah") {
           this.maxUpdateJumlah = args.rowData.maxUpdateJumlah;
-          // this.maxUpdateJumlah = args.rowData.detail_po.Jumlah - parseInt(args.rowData.detail_po.Terpenuhi) + parseInt(args.rowData.JumlahNow)
-          // console.log(this.maxUpdateJumlah)
         }
         args.form.elements.namedItem(this.setFocus.field).focus();
       }

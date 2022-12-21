@@ -1170,8 +1170,8 @@ export default {
         this.editedIndex = -1;
         // this.editedItem.Gudang = this.gudang[0].Nama;
         // this.defaultItem.Gudang = this.gudang[0].Nama;
-        [...this.gudang]
-        console.log(this.gudang)
+        [...this.gudang];
+        console.log(this.gudang);
       });
       this.dialog = false;
       this.alert = false;

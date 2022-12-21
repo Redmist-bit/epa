@@ -188,9 +188,19 @@
             width="170"
           ></e-column>
 
-          <e-column :edit="dropdownUnit" field="Unit" headerText="Unit" width="170"></e-column>
+          <e-column
+            :edit="dropdownUnit"
+            field="Unit"
+            headerText="Unit"
+            width="170"
+          ></e-column>
 
-          <e-column field="Site" :edit="dropdownSite" headerText="Site" width="170"></e-column>
+          <e-column
+            field="Site"
+            :edit="dropdownSite"
+            headerText="Site"
+            width="170"
+          ></e-column>
 
           <!-- <e-column
             field="TanggalKirim"
@@ -283,7 +293,7 @@ import {
   Reorder,
 } from "@syncfusion/ej2-vue-grids";
 import { DropDownList } from "@syncfusion/ej2-dropdowns";
-let elementGudang, GudangObj,elementUnit,UnitObj,elementSite,SiteObj;
+let elementGudang, GudangObj, elementUnit, UnitObj, elementSite, SiteObj;
 import { DatePickerPlugin } from "@syncfusion/ej2-vue-calendars";
 // let gudangnya = [
 //   { Gudang: "GUDANG EPA"},
@@ -301,14 +311,14 @@ export default {
   },
   data() {
     return {
-      dataSite:[
-        {Site:'HO'},
-        {Site:'BERAU'},
-        {Site:'PALEMBANG'},
-        {Site:'SUNGAI DANAU'},
-        {Site:'TABANG'},
-        {Site:'MOROWALI'},
-        {Site:'PALU'}
+      dataSite: [
+        { Site: "HO" },
+        { Site: "BERAU" },
+        { Site: "PALEMBANG" },
+        { Site: "SUNGAI DANAU" },
+        { Site: "TABANG" },
+        { Site: "MOROWALI" },
+        { Site: "PALU" },
       ],
       dropdownGudang: {
         create: () => {
@@ -433,15 +443,18 @@ export default {
       TotalBayar: "",
       DPp: "",
       PPn: "",
-      Unit:"",
-      Site:"",
+      Unit: "",
+      Site: "",
       childpembayaran: [],
       hapus_items: [],
       gudang: "",
       ppnPersen: 0,
       JumlahRules: {
         required: true,
-        min: 1,
+        min: [
+          this.customValidationMin,
+          "Tidak Boleh Kurang dari 0 / receive pembelian"
+        ],
         // max: [
         //   this.customValidationFn,
         //   "Tidak Boleh Lebih dari Permintaan saat RPL",
@@ -547,7 +560,7 @@ export default {
       }
       // if (ket == "Ubah") {
       //   this.JumlahRules.max[1] =
-      //     "Tidak Boleh Lebih dari Permintaan saat RPL / Tidak Boleh Kurang dari receive pembelian";
+      //     "Tidak Boleh Kurang dari receive pembelian";
       // }
     },
     loadRpl(val) {
@@ -592,6 +605,19 @@ export default {
     },
   },
   methods: {
+    customValidationMin(args) {
+      if (this.title == "Ubah") {
+        if (parseInt(args.value) >= parseInt(this.Terpenuhi)) {
+          return true
+        } else {
+          return false
+        }
+      } else {
+        if (parseInt(args.value) > 0) {
+          return true
+        }
+      }
+    },
     customValidationFn(args) {
       if (this.title == "Ubah") {
         if (
@@ -615,14 +641,14 @@ export default {
       if (args.requestType === "beginEdit") {
         // this.sisaRpl = args.rowData.JumlahSisa;
         // console.log(this.sisaRpl)
-        // if (this.title == "Ubah") {
-        //   // this.JumlahRules.max[1] = 'rrr'
-        //   // console.log(this.JumlahRules)
-        //   this.Terpenuhi = args.rowData.Terpenuhi;
-        //   // this.sisaRpl = args.rowData.rpl.Jumlah - args.rowData.Jumlah
-        //   // this.maxUpdateJumlah = args.rowData.rpl.Jumlah - parseInt(args.rowData.rpl.TerpenuhiPO) + parseInt(args.rowData.Jumlah)
-        //   this.maxUpdateJumlah = args.rowData.maxUpdateJumlah;
-        // }
+        if (this.title == "Ubah") {
+          // this.JumlahRules.max[1] = 'rrr'
+          // console.log(this.JumlahRules)
+          this.Terpenuhi = args.rowData.Terpenuhi;
+          // this.sisaRpl = args.rowData.rpl.Jumlah - args.rowData.Jumlah
+          // this.maxUpdateJumlah = args.rowData.rpl.Jumlah - parseInt(args.rowData.rpl.TerpenuhiPO) + parseInt(args.rowData.Jumlah)
+          // this.maxUpdateJumlah = args.rowData.maxUpdateJumlah;
+        }
         // console.log(args)
         // console.log(this.sisaRpl)
         if (args.form.elements.namedItem(this.setFocus.field) != null) {
@@ -686,7 +712,7 @@ export default {
               data.Jumlah = 1;
               data.Gudang = "GUDANG EPA";
               data.Barang = data.Kode;
-              console.log(data.Harga)
+              console.log(data.Harga);
               data.Harga = data.Harga == null ? 0 : data.Harga;
               data.Diskon = 0;
               data.DiskonRp = 0;

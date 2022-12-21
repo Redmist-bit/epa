@@ -142,13 +142,13 @@
           >
           </e-column>
 
-          <e-column
+          <!-- <e-column
             field="JenisPekerjaan"
             :allowEditing="false"
             headerText="JenisPekerjaan"
             width="170"
           >
-          </e-column>
+          </e-column> -->
 
           <e-column
             field="Perkiraan"

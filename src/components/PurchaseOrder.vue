@@ -964,9 +964,7 @@
                                   class="elevation-1"
                                 >
                                   <v-card-title>
-                                    <span class="headline"
-                                      >Pilih Unit</span
-                                    >
+                                    <span class="headline">Pilih Unit</span>
                                   </v-card-title>
                                   <v-spacer></v-spacer>
 
@@ -1123,6 +1121,7 @@
                             <!-- @SyncItemBarangPO='rowSelectedBarang' -->
                             <ItemsPurchaseOrderJasa
                               v-bind:title="title"
+                              v-on:dataPerkiraan="perkiraan($event)"
                               @hapus_item="hps_itemsJasa($event)"
                               @itemsPoJasa="itemsJasa($event)"
                               v-bind:itemsJasa="itempojasa"
@@ -2183,7 +2182,7 @@ import { DatePickerPlugin } from "@syncfusion/ej2-vue-calendars";
 import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
 import ItemsPurchaseOrder from "@/views/PurchaseOrder/items";
-import ItemsPurchaseOrderJasa from "../views/PurchaseOrderJasa/items.vue"
+import ItemsPurchaseOrderJasa from "../views/PurchaseOrderJasa/items.vue";
 import {
   GridPlugin,
   ContextMenu,
@@ -2211,8 +2210,8 @@ export default {
   },
   data() {
     return {
-      dialogUnit:false,
-      Unit:[],
+      dialogUnit: false,
+      Unit: [],
       lockedit: false,
       lockeditEta: false,
       alert: false,
@@ -2223,6 +2222,7 @@ export default {
       mobile: null,
       windowSize: { x: 0, y: 0 },
       ReserveOutcome: 0,
+      AvailableBudget: 0,
       MenuTanggalAwal: false,
       MenuTanggalAkhir: false,
       btn_simpan: false,
@@ -2268,7 +2268,9 @@ export default {
       PartOrderList: [],
       printOutItems: [],
       Gudang: [],
+      Perkiraan:[],
       hapus_items: [],
+      hapus_itemsJasa: [],
       editedItem: {
         KodeNota: "",
         Tanggal: new Date().toISOString().substr(0, 10),
@@ -2292,7 +2294,7 @@ export default {
         NomorWO: "",
         NomorRangka: "",
         apply: "",
-        Unit:""
+        Unit: "",
       },
       defaultItem: {
         KodeNota: "",
@@ -2317,10 +2319,10 @@ export default {
         NomorWO: "",
         NomorRangka: "",
         apply: "",
-        Unit:""
+        Unit: "",
       },
       data: [],
-      DataUnit:[],
+      DataUnit: [],
       totalharga: [],
       stored: [],
       supplier: [],
@@ -2339,7 +2341,11 @@ export default {
       itembaranglist: [],
       storeddata: [],
       itembarangpo: [],
-      itempojasa:[],
+      itempojasa: [],
+      Items:{
+        Barang: [],
+        Pekerjaan: []
+      },
       pembayaran: [],
       childitembarangpo: [],
       CodingTerlarang: ["A3", "B3", "C3", "E3", "D3", "T3", "Z"],
@@ -2415,6 +2421,7 @@ export default {
     ],
   },
   mounted() {
+    // console.log(JSON.parse(localStorage.getItem('user')).Kode.substr(0,4)+"/0001")
     // check actions
     if (this.action.some((a) => a == "R")) {
       this.items_periode = JSON.parse(localStorage.getItem("Periode")).map(
@@ -2516,16 +2523,20 @@ export default {
         this.mobile = true;
       }
     },
-
-    //  dialog(val){
-    //    val || this.close();
-    //  },
-    itembarangpo: {
-      handler() {
-        //  let paket = JSON.parse(sessionStorage.getItem('paket'))
-        // let paket = this.pembayaran
-        // console.log('paket di po',paket)
-      },
+    Items:{
+        deep: true,
+        handler(val){
+            // console.log(this.Items)
+            let totalBarang = val.Barang.reduce((a,b) => a + parseFloat(b.SubTotal), 0)
+            let totalPekerjaan =  val.Pekerjaan.reduce((a,b) => a + parseFloat(b.SubTotal), 0)
+            let PPn = parseFloat(totalPekerjaan + totalBarang) * parseFloat(this.editedItem.PPnPersen) / 100
+            this.editedItem.Diskon =  val.Barang.reduce((a,b) => a + parseFloat(b.DiskonRp), 0) + val.Pekerjaan.reduce((a,b) => a + parseFloat(b.DiskonRp), 0)
+            this.editedItem.DPP = totalBarang + totalPekerjaan
+            this.editedItem.Total = this.editedItem.Diskon + this.editedItem.DPP
+            // console.log(this.editedItem.Total)
+            this.editedItem.PPn = PPn
+            this.editedItem.TotalBayar = totalBarang + totalPekerjaan + PPn
+        }
     },
     dialog: {
       handler() {
@@ -2733,6 +2744,10 @@ export default {
     gudang(v) {
       this.Gudang = v;
     },
+    perkiraan(p){
+      this.Perkiraan = p;
+      // console.log(this.Perkiraan)
+    },
     onDoubleClickUang: function (args) {
       this.editedItem.MataUang = args.rowData.Nama;
       this.dialogMataUang = false;
@@ -2835,7 +2850,7 @@ export default {
         // if (this.editedItem.NomorWO == "") {
         //   this.alert = true;
         //   this.pesan = "Nomor WO tidak boleh kosong";
-        // } 
+        // }
         if (this.editedItem.Supplier == "") {
           this.alert = true;
           this.pesan = "Supplier tidak boleh kosong";
@@ -2850,7 +2865,9 @@ export default {
             this.snackbar = true;
           } else {
             if (this.editedItem.NomorWO != "") {
-              if (parseFloat(this.ReserveOutcome) < this.editedItem.TotalBayar) {
+              if (parseFloat(this.AvailableBudget) > 0 && parseFloat(this.AvailableBudget) < this.editedItem.TotalBayar) {
+                alert("Total Bayar Melebihi Budget");
+              } else if (parseFloat(this.ReserveOutcome) < this.editedItem.TotalBayar) {
                 alert("Total Bayar Melebihi Budget");
               } else {
                 this.isLoading = true;
@@ -2874,8 +2891,9 @@ export default {
           this.pesan = "PaymentTerm tidak boleh kosong";
         } else {
           if (this.editedItem.NomorWO != "") {
-            console.log(this.editedItem.NomorWO)
-            if (parseFloat(this.ReserveOutcome) < this.editedItem.TotalBayar) {
+            if (parseFloat(this.AvailableBudget) > 0 && parseFloat(this.AvailableBudget) < this.editedItem.TotalBayar) {
+              alert("Total Bayar Melebihi Budget");
+            } else if (parseFloat(this.ReserveOutcome) < this.editedItem.TotalBayar) {
               alert("Total Bayar Melebihi Budget");
             } else {
               this.isLoading = true;
@@ -2904,18 +2922,24 @@ export default {
       this.editedItem.SellFrom = this.supplier.find(
         (s) => s.Nama == this.editedItem.SellFrom
       ).Kode;
-      this.editedItem.Unit = this.editedItem.Unit == "" ? "" : this.DataUnit.find(
-        (s) => s.Nama == this.editedItem.Unit
-      ).Kode
+      this.editedItem.Unit =
+        this.editedItem.Unit == ""
+          ? ""
+          : this.DataUnit.find((s) => s.Nama == this.editedItem.Unit).Kode;
       // console.log(this.editedItem.Unit)
       this.editedItem.items = this.itembarangpo.map((i) => {
         i.Gudang =
           i.Gudang == "" || i.Gudang == null
-            ? "0101/0001"
+            ? JSON.parse(localStorage.getItem('user')).Kode.substr(0,4)+"/0001"
             : this.Gudang.find((g) => g.Nama == i.Gudang).Kode;
-        i.Unit = i.Unit == "" || i.Unit == null ? null : this.DataUnit.find((u) => u.Nama == i.Unit).Kode
+        i.Unit =
+          i.Unit == "" || i.Unit == null
+            ? null
+            : this.DataUnit.find((u) => u.Nama == i.Unit).Kode;
         return i;
       });
+      // console.log(this.itempojasa)
+      this.editedItem.itemsJasa = this.Items.Pekerjaan
       api
         .post("/purchase-orders?token=" + this.token, this.editedItem)
         .then((res) => {
@@ -2931,12 +2955,13 @@ export default {
     },
     UpdateData() {
       this.editedItem.hapus_items = this.hapus_items;
+      this.editedItem.hapus_itemsJasa = this.hapus_itemsJasa;
       this.editedItem.items = this.itembarangpo
         .filter((v) => v.KodeNota != undefined)
         .map((i) => {
           i.Gudang =
             i.Gudang == "" || i.Gudang == null
-              ? "0101/0001"
+              ? JSON.parse(localStorage.getItem('user')).Kode.substr(0,4)+"/0001"
               : this.Gudang.find((g) => g.Nama == i.Gudang).Kode;
           return i;
         });
@@ -2945,13 +2970,13 @@ export default {
         .map((i) => {
           i.Gudang =
             i.Gudang == "" || i.Gudang == null
-              ? "0101/0001"
+              ? JSON.parse(localStorage.getItem('user')).Kode.substr(0,4)+"/0001"
               : this.Gudang.find((g) => g.Nama == i.Gudang).Kode;
           return i;
         });
-      // console.log('new',this.editedItem.new_items)
-      // console.log('update',this.editedItem.items)
-      // console.log('delete',this.editedItem.hapus_items)
+      this.editedItem.itemsJasa = this.Items.Pekerjaan.filter((v) => v.KodeNota != undefined)
+      this.editedItem.new_itemsJasa = this.Items.Pekerjaan
+        .filter((f) => f.KodeNota == undefined)
       api
         .put(
           "/purchase-orders/" + this.editedItem.id + "?token=" + this.token,
@@ -2971,14 +2996,7 @@ export default {
     autoTanggal() {
       this.editedItem.tanggal = this.HariIni;
     },
-
-    hps_items(data) {
-      // data.forEach(element => {
-      //   this.hapus_items.push(element)
-      // });
-      this.hapus_items = data;
-      // console.log(this.hapus_items)
-    },
+    
 
     TambahPPn() {
       this.editedItem.PPnPersen = this.editedItem.PPnPersen || 0;
@@ -3000,6 +3018,7 @@ export default {
     close() {
       this.$nextTick(() => {
         this.ReserveOutcome = 0;
+        this.AvailableBudget = 0
         this.dialog = false;
         this.lockedit = false;
         this.lockeditEta = false;
@@ -3011,6 +3030,7 @@ export default {
         this.editedIndex = -1;
         this.btn_simpan = false;
         this.itembarangpo = [];
+        this.itempojasa = []
         this.autoTanggal();
         // this.$refs.BarangPO.resetBarangPO()
       });
@@ -3110,9 +3130,11 @@ export default {
             }
             if (res.data.data.wo != undefined) {
               this.ReserveOutcome = res.data.data.wo.ReserveOutcome;
+              this.AvailableBudget = res.data.data.wo.AvailableBudget
             }
             this.editedItem = res.data.data;
-            this.editedItem.NomorWO = res.data.data.NomorWO == null ? "" : res.data.data.NomorWO
+            this.editedItem.NomorWO =
+              res.data.data.NomorWO == null ? "" : res.data.data.NomorWO;
             this.editedItem.Supplier = res.data.data.supplier.Nama;
             this.editedItem.BillFrom = res.data.data.bill_from.Nama;
             this.editedItem.SellFrom = res.data.data.sell_from.Nama;
@@ -3135,6 +3157,20 @@ export default {
               v.Kendaraan = v.barang.Kendaraan;
               v.Gudang = v.gudang.Nama;
               v.Satuan = v.satuan.Nama;
+              return v;
+            });
+            this.itempojasa = res.data.data.items_jasa.map((v) => {
+              v.DiskonRp = v.Diskon;
+              v.Diskon = v.Diskon1;
+              v.SubTotal =
+                v.Jumlah *
+                (parseFloat(v.Harga) -
+                  (parseFloat(v.Harga) * parseFloat(v.Diskon)) / 100);
+              // v.rwl = res.data.rwl.find(
+              //   (p) => p.JenisPekerjaan == v.JenisPekerjaan
+              // );
+              // v.JenisPekerjaan = v.pekerjaan.Nama;
+              v.Perkiraan = v.perkiraan.Nama;
               return v;
             });
             this.isLoading = false;
@@ -3184,24 +3220,55 @@ export default {
       this.dialogSellFrom = false;
     },
     items(data) {
-      // console.log('awokwok',data)
       this.itembarangpo = data;
-      this.editedItem.DPP = data.reduce(
-        (a, b) => a + parseFloat(b.SubTotal),
-        0
-      );
-      this.editedItem.diskon = data.reduce(
-        (a, b) =>
-          a + parseFloat(b.Jumlah * parseFloat((b.Harga * b.Diskon) / 100)),
-        0
-      );
-      this.editedItem.PPn =
-        (parseInt(this.editedItem.PPnPersen) *
-          parseFloat(this.editedItem.DPP)) /
-        100;
-      this.editedItem.TotalBayar =
-        parseFloat(this.editedItem.DPP) + parseFloat(this.editedItem.PPn);
-      console.log(this.editedItem.diskon);
+      this.Items.Barang = data
+      // console.log(this.Items)
+      // this.editedItem.DPP = this.editedItem.DPP + data.reduce(
+      //   (a, b) => a + parseFloat(b.SubTotal),
+      //   0
+      // );
+      // this.editedItem.diskon = data.reduce(
+      //   (a, b) =>
+      //     a + parseFloat(b.Jumlah * parseFloat((b.Harga * b.Diskon) / 100)),
+      //   0
+      // );
+      // this.editedItem.PPn =
+      //   (parseInt(this.editedItem.PPnPersen) *
+      //     parseFloat(this.editedItem.DPP)) /
+      //   100;
+      // this.editedItem.TotalBayar =
+      //   parseFloat(this.editedItem.DPP) + parseFloat(this.editedItem.PPn);
+    },
+    hps_itemsJasa(data){
+      this.hapus_itemsJasa = data;
+    },
+    itemsJasa(data){
+      this.itempojasa = data;
+      data.forEach(element => {
+          if (element.Perkiraan != '') {
+            let findPerkiraan = this.Perkiraan.find(f => f.Nama == element.Perkiraan)
+            element.KodePerkiraan = findPerkiraan == undefined ? '' : findPerkiraan.Kode
+          }
+      });
+      this.Items.Pekerjaan = data
+      // this.editedItem.DPP = this.editedItem.DPP + data.reduce(
+      //   (a, b) => a + parseFloat(b.SubTotal),
+      //   0
+      // );
+      // this.editedItem.diskon = data.reduce(
+      //   (a, b) =>
+      //     a + parseFloat(b.Jumlah * parseFloat((b.Harga * b.Diskon) / 100)),
+      //   0
+      // );
+      // this.editedItem.PPn =
+      //   (parseInt(this.editedItem.PPnPersen) *
+      //     parseFloat(this.editedItem.DPP)) /
+      //   100;
+      // this.editedItem.TotalBayar =
+      //   parseFloat(this.editedItem.DPP) + parseFloat(this.editedItem.PPn);
+    },
+    hps_items(data) {
+      this.hapus_items = data;
     },
     rowSelectedBarang(childitembarangpo, pembayaran) {
       this.itembarangpo = childitembarangpo;
@@ -3262,7 +3329,7 @@ export default {
     },
 
     getDataPurchaseOrder(from, to) {
-      console.log("from", from, "to", to);
+      // console.log("from", from, "to", to);
       this.isLoading = true;
       api
         .get("/purchase-orders/" + from + "/" + to + "/?token=" + this.token)
@@ -3394,17 +3461,18 @@ export default {
         this.editedItem.PaymentTerm = args.rowData.PaymentTerm;
         this.editedItem.Kurs = args.rowData.Kurs;
         this.ReserveOutcome = args.rowData.ReserveOutcome;
+        this.AvailableBudget = args.rowData.AvailableBudget;
         this.dialogWorkOrder = false;
       } else {
         alert(args.rowData.KeteranganWIP);
       }
     },
     dataStateChangeUnit: function (args) {
-      console.log(args)
+      console.log(args);
     },
     onDoubleClickUnit: function (args) {
-      this.editedItem.Unit = args.rowData.Nama
-      this.dialogUnit = false
+      this.editedItem.Unit = args.rowData.Nama;
+      this.dialogUnit = false;
     },
   },
 };

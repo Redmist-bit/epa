@@ -345,7 +345,12 @@
                                       label="Jenis Work Order"
                                   ></v-text-field> -->
                       <v-combobox
-                        :items="['Konstruksi Gedung', 'Konstruksi Jalan', 'Konstruksi Bangunan Air']"
+                        :items="[
+                          'Konstruksi Gedung',
+                          'Konstruksi Jalan',
+                          'Konstruksi Bangunan Air',
+                          'Rental'
+                        ]"
                         v-model="editedItem.JenisWorkOrder"
                         label="Jenis Work Order"
                       ></v-combobox>
@@ -367,7 +372,7 @@
                           'SUNGAI DANAU',
                           'TABANG',
                           'MOROWALI',
-                          'PALU'
+                          'PALU',
                         ]"
                         v-model="editedItem.Lokasi"
                         label="Lokasi"
@@ -475,6 +480,101 @@
                                           field="ContactPerson"
                                           headerText="Contact Person"
                                           width="180"
+                                        ></e-column>
+                                      </e-columns>
+                                    </ejs-grid>
+                                  </v-card>
+                                </v-col>
+                              </v-card>
+                            </v-card>
+                          </v-dialog>
+                        </template>
+                      </v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="6">
+                      <v-text-field
+                        v-model="editedItem.Unit"
+                        readonly
+                        label="Unit"
+                      >
+                        <template v-slot:append>
+                          <v-dialog
+                            v-model="dialogUnit"
+                            scrollable
+                            max-width="900px"
+                            persistent
+                          >
+                            <template v-slot:activator="{ on, attrs }">
+                              <v-btn
+                                dark
+                                small
+                                class="mt-n2"
+                                color="blue darken-4"
+                                v-bind="attrs"
+                                v-on="on"
+                              >
+                                <v-icon>mdi-dots-horizontal</v-icon>
+                              </v-btn>
+                            </template>
+                            <v-card>
+                              <v-toolbar
+                                dark
+                                outline
+                                color="blue darken-4"
+                                class="elevation-0"
+                              >
+                                <v-spacer></v-spacer>
+                                <v-btn
+                                  dark
+                                  text
+                                  fab
+                                  small
+                                  @click="dialogUnit = false"
+                                >
+                                  <v-icon class="mx-1">mdi-window-close</v-icon>
+                                </v-btn>
+                              </v-toolbar>
+                              <v-card flat>
+                                <v-col cols="12" md="12">
+                                  <v-card>
+                                    <ejs-grid
+                                      ref="Unit"
+                                      :pageSettings="pageSettings"
+                                      :dataSource="Unit"
+                                      height="200"
+                                      width="100%"
+                                      gridLines="Both"
+                                      :allowResizing="true"
+                                      :allowPaging="true"
+                                      :toolbar="toolbarOptionsSub"
+                                      :recordDoubleClick="rowSelectedUnit"
+                                    >
+                                      <e-columns>
+                                        <e-column
+                                          field="Kode"
+                                          headerText="Kode"
+                                          textAlign="Left"
+                                          width="180"
+                                        ></e-column>
+                                        <e-column
+                                          field="Nama"
+                                          headerText="Nama"
+                                          width="180"
+                                        ></e-column>
+                                        <e-column
+                                          field="SerialNumber"
+                                          headerText="Serial Number"
+                                          width="180"
+                                        ></e-column>
+                                        <e-column
+                                          field="Brand"
+                                          headerText="Brand"
+                                          width="150"
+                                        ></e-column>
+                                        <e-column
+                                          field="Type"
+                                          headerText="Type"
+                                          width="150"
                                         ></e-column>
                                       </e-columns>
                                     </ejs-grid>
@@ -2476,6 +2576,8 @@ export default {
   data() {
     return {
       alert: "",
+      dialogUnit:false,
+      Unit:[],
       dialogExcel: false,
       dialogMataUangEstimasi: false,
       BarangExcel: [],
@@ -2574,8 +2676,9 @@ export default {
         DPP: 0,
         PPn: 0,
         PPnPersen: 0,
-        ReserveOutcome:0,
-        ReserveOutcomeJasa:0
+        ReserveOutcome: 0,
+        ReserveOutcomeJasa: 0,
+        Unit:''
       },
       editedItem: {
         KodeNota: "",
@@ -2597,8 +2700,9 @@ export default {
         DPP: 0,
         PPn: 0,
         PPnPersen: 0,
-        ReserveOutcome:0,
-        ReserveOutcomeJasa:0
+        ReserveOutcome: 0,
+        ReserveOutcomeJasa: 0,
+        Unit:''
       },
       Estimasi: {
         KodeNota: "",
@@ -2855,6 +2959,7 @@ export default {
       );
       this.getAsuransi();
       this.getMataUang();
+      this.getUnit();
       // this.getNoRangka()
     }
     if (this.action.some((a) => a == "C")) {
@@ -2969,6 +3074,17 @@ export default {
     },
   },
   methods: {
+    getUnit(){
+      api.get("unit?token=" + this.token).then(
+        (res) => {
+          this.isLoading = false;
+          this.Unit = res.data.data;
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+    },
     isNumber: function (evt) {
       evt = evt ? evt : window.event;
       var charCode = evt.which ? evt.which : evt.keyCode;
@@ -3319,6 +3435,10 @@ export default {
       this.ItemsKeluhan = data;
       console.log("keluhan dia", this.ItemsKeluhan);
     },
+    rowSelectedUnit: function (args) {
+      this.editedItem.Unit = args.rowData.Nama;
+      this.dialogUnit = false;
+    },
     rowSelectedAsuransi: function (args) {
       this.editedItem.Pelanggan = args.rowData.Nama;
       this.dialogAsuransi = false;
@@ -3478,6 +3598,7 @@ export default {
       // this.editedItem.Lessor = Lessor.Kode
       this.editedItem.MataUang = MataUang.Kode;
       // this.editedItem.keluhan = this.ItemsKeluhan
+      this.editedItem.Unit = this.editedItem.Unit == "" ? "" : this.Unit.find(p => p.Nama == this.editedItem.Unit).Kode
       api
         .post("/workOrder?token=" + this.token, this.editedItem)
         .then(() => {
@@ -3504,6 +3625,7 @@ export default {
       this.editedItem.MataUang = MataUang.Kode;
       // this.editedItem.keluhan = this.ItemsKeluhan
       // this.editedItem.hapus_items = this.hapus_items
+      this.editedItem.Unit = this.editedItem.Unit == "" ? "" : this.Unit.find(p => p.Nama == this.editedItem.Unit).Kode
       api
         .put(
           "workOrder/" + this.editedItem.id + "?token=" + this.token,
@@ -3632,36 +3754,37 @@ export default {
         this.dialog = true;
         this.isLoading = true;
         let period = JSON.parse(localStorage.getItem("Periode")).find(
-        (d) =>
+          (d) =>
             d.Kode ===
             args.rowData.DiBuatTgl.substr(0, 4) +
-            args.rowData.DiBuatTgl.substr(5, 2)
+              args.rowData.DiBuatTgl.substr(5, 2)
         );
         if (period.Status == 0) {
-        alert("Tidak dapat di ubah karena periode sudah tutup");
-        this.btn_simpan = true;
+          alert("Tidak dapat di ubah karena periode sudah tutup");
+          this.btn_simpan = true;
         }
         if (args.rowData.Status == "BATAL") {
-        alert("Tidak dapat di ubah karena sudah dibatalkan");
-        this.btn_simpan = true;
+          alert("Tidak dapat di ubah karena sudah dibatalkan");
+          this.btn_simpan = true;
         }
-        this.editedItem.id = args.rowData.id
-        this.editedItem.KodeNota = args.rowData.KodeNota
-        this.editedItem.Tanggal = args.rowData.Tanggal
-        this.editedItem.JenisWorkOrder = args.rowData.JenisWorkOrder
-        this.editedItem.Odometer = args.rowData.Odometer
-        this.editedItem.Lokasi = args.rowData.Lokasi
-        this.editedItem.PaymentTerm = args.rowData.PaymentTerm
-        this.editedItem.Pelanggan = args.rowData.pelanggan.Nama
-        this.editedItem.MataUang = args.rowData.uang.Nama
-        this.editedItem.Kurs = args.rowData.Kurs
-        this.editedItem.Referensi = args.rowData.Referensi
-        this.editedItem.Keterangan = args.rowData.Keterangan
-        this.editedItem.DPP = args.rowData.DPP
-        this.editedItem.PPn = args.rowData.PPn
-        this.editedItem.PPnPersen = args.rowData.PPnPersen
-        this.editedItem.ReserveOutcome = args.rowData.ReserveOutcome
-        this.editedItem.ReserveOutcomeJasa = args.rowData.ReserveOutcomeJasa
+        this.editedItem.id = args.rowData.id;
+        this.editedItem.KodeNota = args.rowData.KodeNota;
+        this.editedItem.Tanggal = args.rowData.Tanggal;
+        this.editedItem.JenisWorkOrder = args.rowData.JenisWorkOrder;
+        this.editedItem.Odometer = args.rowData.Odometer;
+        this.editedItem.Lokasi = args.rowData.Lokasi;
+        this.editedItem.PaymentTerm = args.rowData.PaymentTerm;
+        this.editedItem.Pelanggan = args.rowData.pelanggan.Nama;
+        this.editedItem.MataUang = args.rowData.uang.Nama;
+        this.editedItem.Kurs = args.rowData.Kurs;
+        this.editedItem.Referensi = args.rowData.Referensi;
+        this.editedItem.Keterangan = args.rowData.Keterangan;
+        this.editedItem.DPP = args.rowData.DPP;
+        this.editedItem.PPn = args.rowData.PPn;
+        this.editedItem.PPnPersen = args.rowData.PPnPersen;
+        this.editedItem.ReserveOutcome = args.rowData.ReserveOutcome;
+        this.editedItem.ReserveOutcomeJasa = args.rowData.ReserveOutcomeJasa;
+        this.editedItem.Unit = args.rowData.unit == null ? "" : args.rowData.unit.Nama;
         this.isLoading = false;
         this.editedIndex = 1;
         this.title = "Ubah";
