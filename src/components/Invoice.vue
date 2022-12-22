@@ -1,7 +1,21 @@
 <template>
   <div v-resize="onResize">
     <loading :active.sync="isLoading" :is-full-page="fullPage"></loading>
-
+    <v-snackbar
+      v-model="alert"
+      rounded="lg"
+      top
+      color="error"
+      :value="true"
+      :timeout="-1"
+    >
+      <span
+        ><v-icon left>mdi-alert-circle</v-icon>{{ pesan }}
+        <v-icon @click="alert = false" style="float: right"
+          >mdi-close</v-icon
+        ></span
+      >
+    </v-snackbar>
     <v-dialog
       v-model="dialog_periode"
       transition="dialog-top-transition"
@@ -293,6 +307,7 @@
                       <v-text-field
                         v-model="editedItem.Pelanggan"
                         label="Pelanggan"
+                        readonly
                       >
                         <template v-slot:append>
                           <v-dialog
@@ -514,7 +529,7 @@
                         </template>
                       </v-text-field>
                     </v-col>
-                    <v-col cols="12" md="6" sm="6">
+                    <!-- <v-col cols="12" md="6" sm="6">
                       <v-text-field
                         v-model="editedItem.KAss"
                         label="KAss"
@@ -567,24 +582,24 @@
                         v-model="editedItem.Kexc"
                         label="Kexc"
                       ></v-text-field>
-                    </v-col>
+                    </v-col> -->
                     <v-col cols="12" md="6" sm="6">
                       <v-text-field
                         v-model="editedItem.PaymentTerm"
                         label="Payment Term"
                       ></v-text-field>
                     </v-col>
-                    <v-col cols="12" md="6" sm="6">
+                    <!-- <v-col cols="12" md="6" sm="6">
                       <v-text-field
                         v-model="editedItem.Kund"
                         label="Kund"
                       ></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
+                    </v-col> -->
+                    <!-- <v-col cols="12">
                       <v-btn @click="loadEstimasi"
                         >Load Estimasi Terakhir</v-btn
                       >
-                    </v-col>
+                    </v-col> -->
                     <v-col cols="12">
                       <v-card class="elevation-5" outlined>
                         <v-tabs
@@ -1658,6 +1673,8 @@ export default {
   },
   data() {
     return {
+      alert: false,
+      pesan: "",
       dialog_detail: false,
       ScrollKeAtas: false,
       mobile: null,
@@ -1710,7 +1727,7 @@ export default {
       },
       defaultItem: {
         KodeNota: "",
-        MataUang: "",
+        MataUang: "Rupiah",
         Kurs: 1,
         Pelanggan: "",
         Referensi: "",
@@ -1731,10 +1748,11 @@ export default {
         PPnPersen: 11,
         PPn: 0,
         TotalBayar: 0,
+        Tanggal: new Date().toISOString().substr(0, 10),
       },
       editedItem: {
         KodeNota: "",
-        MataUang: "",
+        MataUang: "Rupiah",
         Kurs: 1,
         Pelanggan: "",
         Referensi: "",
@@ -1755,6 +1773,7 @@ export default {
         PPnPersen: 11,
         PPn: 0,
         TotalBayar: 0,
+        Tanggal: new Date().toISOString().substr(0, 10),
       },
       hapus_items: {
         Barang: [],
@@ -1891,6 +1910,7 @@ export default {
           (a, b) => a + parseFloat(b.SubTotal),
           0
         );
+        // console.log(totalPekerjaan)
         let PPn =
           (parseFloat(totalPekerjaan + totalBarang) *
             parseFloat(this.editedItem.PPnPersen)) /
@@ -2217,8 +2237,13 @@ export default {
       }
     },
     save() {
-      if (this.formTitle === "Tambah Invoice") {
-        this.TambahData();
+      if (this.editedIndex == -1) {
+        if (this.editedItem.Pelanggan == "") {
+          this.alert = true;
+          this.pesan = "Pelanggan tidak boleh kosong";
+        } else {
+          this.TambahData();
+        }
       } else {
         this.UpdateData();
       }
@@ -2257,8 +2282,20 @@ export default {
     },
     UpdateData() {
       this.isLoading = true;
-      this.editedItem.Items = this.Items;
+      // this.editedItem.Items = this.Items;
       this.editedItem.hapus_items = this.hapus_items;
+      this.editedItem.new_itemsBarang = this.Items.Barang.filter(
+        (f) => f.KodeNota == undefined
+      );
+      this.editedItem.itemsBarang = this.Items.Barang.filter(
+        (f) => f.KodeNota != undefined
+      );
+      this.editedItem.new_itemsJasa = this.Items.Pekerjaan.filter(
+        (f) => f.KodeNota == undefined
+      );
+      this.editedItem.itemsJasa = this.Items.Pekerjaan.filter(
+        (v) => v.KodeNota != undefined
+      );
       api
         .put(
           "invoice/" + this.editedItem.id + "?token=" + this.token,
@@ -2415,12 +2452,12 @@ export default {
             }
             this.editedItem = res.data.data;
             this.editedItem.MataUang = res.data.data.uang.Nama;
-            this.editedItem.Pelanggan = res.data.data.wo.pelanggan.Nama;
+            this.editedItem.Pelanggan = res.data.data.pelanggan.Nama;
             this.Items.Barang = res.data.data.barang.map((val) => {
               // val.Bekas = val.BarangBekas
-              if (val.Perkiraan != "" || val.Perkiraan != null) {
-                val.Perkiraan = val.perkiraan.Nama;
-              }
+              // if (val.Perkiraan != "" || val.Perkiraan != null) {
+              //   val.Perkiraan = val.perkiraan.Nama;
+              // }
               if (val.barang != null) {
                 val.Satuan = val.satuan.Nama;
                 val.PartNumber1 = val.barang.PartNumber1;
@@ -2461,7 +2498,7 @@ export default {
               }
               val.DiskonRp = val.Diskon;
               val.Diskon = val.Diskon1;
-              val.JenisPekerjaan = val.kerja.Nama;
+              // val.JenisPekerjaan = val.kerja.Nama;
               val.SubTotal =
                 val.Jumlah *
                 (parseFloat(val.Harga) -

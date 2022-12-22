@@ -39,7 +39,7 @@
               <ejs-grid
                 id="Grid"
                 ref="ggs"
-                :dataSource="dataPekerjaan"
+                :dataSource="perkiraan"
                 height="250"
                 width="100%"
                 gridLines="Both"
@@ -49,7 +49,7 @@
                 :allowPaging="true"
                 :pageSettings="pageSettings"
                 :toolbar="toolbarOptionsSelect"
-                :rowSelected="rowSelectedPekerjaan"
+                :rowSelected="rowSelectedPerkiraan"
               >
                 <e-columns>
                   <e-column
@@ -63,7 +63,7 @@
                   <e-column field="Nama" headerText="Nama" width="250">
                   </e-column>
 
-                  <e-column
+                  <!-- <e-column
                     field="GrupPekerjaan"
                     headerText="Grup Pekerjaan"
                     width="170"
@@ -89,7 +89,7 @@
                     headerText="Harga Beli Default"
                     width="170"
                   >
-                  </e-column>
+                  </e-column> -->
                 </e-columns>
               </ejs-grid>
             </v-card>
@@ -127,15 +127,23 @@
         :allowPaging="true"
       >
         <e-columns>
-          <e-column
+          <!-- <e-column
             field="JenisPekerjaan"
             headerText="Jenis Pekerjaan"
             :isPrimaryKey="true"
             width="180"
             :allowEditing="false"
           >
+          </e-column> -->
+          <e-column
+            field="NoUrut"
+            headerText="NoUrut"
+            :allowEditing="false"
+            width="170"
+            :visible="false"
+            :isPrimaryKey="true"
+          >
           </e-column>
-
           <e-column
             field="Perkiraan"
             headerText="Perkiraan"
@@ -145,18 +153,14 @@
           >
           </e-column>
 
-          <e-column
-            field="Keterangan"
-            :allowEditing="false"
-            headerText="Keterangan"
-            width="170"
-          >
+          <e-column field="Keterangan" headerText="Keterangan" width="170">
           </e-column>
 
           <e-column
             field="Jumlah"
             headerText="Jumlah"
             width="170"
+            editType="numericedit"
             textAlign="Right"
           >
           </e-column>
@@ -173,13 +177,19 @@
             field="Harga"
             type="number"
             format="N"
+            editType="numericedit"
             textAlign="Right"
             headerText="Harga"
             width="170"
           >
           </e-column>
 
-          <e-column field="Diskon" headerText="Diskon (%)" width="170">
+          <e-column
+            field="Diskon"
+            editType="numericedit"
+            headerText="Diskon (%)"
+            width="170"
+          >
           </e-column>
 
           <e-column
@@ -270,7 +280,7 @@ export default {
               dataSource: this.perkiraan,
               fields: { value: "Kode", text: "Nama" },
               value: w.rowData.Kode,
-              text: w.rowData.Nama,
+              text: w.rowData.Perkiraan,
               change: (d) => {
                 console.log("d gada isi", d);
               },
@@ -282,7 +292,7 @@ export default {
               dataSource: this.perkiraan,
               fields: { value: "Kode", text: "Nama" },
               value: w.rowData.Kode,
-              text: w.rowData.Nama,
+              text: w.rowData.Perkiraan,
               change: (d) => {
                 console.log("d", d);
               },
@@ -336,7 +346,7 @@ export default {
 
     loadEstimasiPekerjaan(val) {
       this.listPekerjaan = val;
-      console.log(val);
+      // console.log(val);
     },
     title(ket) {
       if (ket == "Kosongkan") {
@@ -352,7 +362,7 @@ export default {
   mounted() {
     // console.log(this.dataPerkiraan)
     // this.getPerkiraan()
-    this.getDataPekerjaan();
+    // this.getDataPekerjaan();
   },
   methods: {
     onResize() {
@@ -363,99 +373,81 @@ export default {
       this.listPekerjaan = [...this.listPekerjaan];
       if (this.listPekerjaan.length > 0) {
         if (this.pekerjaanSelected.length != undefined) {
-          this.pekerjaanSelected.forEach((element) => {
-            const data = element;
-            let pekerjaanExist = this.listPekerjaan.findIndex(
-              (b) => b.Pekerjaan == data.Kode
-            );
-            if (pekerjaanExist != -1) {
-              this.listPekerjaan[pekerjaanExist].Jumlah += 1;
-              this.listPekerjaan[pekerjaanExist].SubTotal = parseFloat(
-                this.listPekerjaan[pekerjaanExist].Jumlah *
-                  parseFloat(
-                    parseFloat(this.listPekerjaan[pekerjaanExist].Harga) -
-                      parseFloat(this.listPekerjaan[pekerjaanExist].DiskonRp)
-                  )
-              );
-            } else {
-              data.Pekerjaan = data.Kode;
-              data.Jumlah = 1;
-              data.Rasio = 1;
-              data.Diskon = 0;
-              data.Perkiraan = "";
-              data.DiskonRp = 0;
-              data.JenisPekerjaan = data.Nama;
-              data.Keterangan = "";
-              data.Harga = data.HargaJualDefault;
-              data.SubTotal = data.HargaJualDefault;
-              this.listPekerjaan.push(data);
-            }
-          });
-        } else {
-          let pekerjaanExist = this.listPekerjaan.findIndex(
-            (b) => b.Pekerjaan == this.pekerjaanSelected.Kode
-          );
-          if (pekerjaanExist != -1) {
-            this.listPekerjaan[pekerjaanExist].Jumlah += 1;
-            this.listPekerjaan[pekerjaanExist].SubTotal = parseFloat(
-              this.listPekerjaan[pekerjaanExist].Jumlah *
-                parseFloat(
-                  parseFloat(this.listPekerjaan[pekerjaanExist].Harga) -
-                    parseFloat(this.listPekerjaan[pekerjaanExist].DiskonRp)
-                )
-            );
-          } else {
-            this.pekerjaanSelected.Pekerjaan = this.pekerjaanSelected.Kode;
-            this.pekerjaanSelected.JenisPekerjaan = this.pekerjaanSelected.Nama;
-            this.pekerjaanSelected.Jumlah = 1;
-            this.pekerjaanSelected.Rasio = 1;
-            this.pekerjaanSelected.Perkiraan = "";
-            this.pekerjaanSelected.Harga =
-              this.pekerjaanSelected.HargaJualDefault;
-            this.pekerjaanSelected.Diskon = 0;
-            this.pekerjaanSelected.DiskonRp = 0;
-            this.pekerjaanSelected.SubTotal =
-              this.pekerjaanSelected.HargaJualDefault;
-            console.log("disini", this.pekerjaanSelected);
-            this.listPekerjaan.push(this.pekerjaanSelected);
-          }
-        }
-      } else {
-        if (this.pekerjaanSelected.length != undefined) {
-          this.pekerjaanSelected.forEach((element) => {
-            const data = element;
-            data.Pekerjaan = data.Kode;
-            data.JenisPekerjaan = data.Nama;
-            data.Keterangan = "";
-            data.Harga = data.HargaJualDefault;
-            data.Diskon = 0;
-            data.Perkiraan = "";
-            data.DiskonRp = 0;
-            data.SubTotal = data.HargaJualDefault;
-            data.Jumlah = 1;
-            data.Rasio = 1;
+          this.pekerjaanSelected.forEach((e, index) => {
+            const data = {
+              NoUrut:
+                index == 0
+                  ? index +
+                    1 +
+                    parseInt(
+                      this.listPekerjaan[this.listPekerjaan.length - 1].NoUrut
+                    )
+                  : parseInt(
+                      this.listPekerjaan[this.listPekerjaan.length - 1].NoUrut
+                    ) + 1,
+              Jumlah: 1,
+              Rasio: 1,
+              Diskon: 0,
+              DiskonRp: 0,
+              Perkiraan: e.Nama,
+              Keterangan: "",
+              Harga: 0,
+              SubTotal: 0,
+            };
             this.listPekerjaan.push(data);
           });
         } else {
-          this.pekerjaanSelected.Pekerjaan = this.pekerjaanSelected.Kode;
-          this.pekerjaanSelected.JenisPekerjaan = this.pekerjaanSelected.Nama;
-          this.pekerjaanSelected.Jumlah = 1;
-          this.pekerjaanSelected.Rasio = 1;
-          this.pekerjaanSelected.Harga =
-            this.pekerjaanSelected.HargaJualDefault;
-          this.pekerjaanSelected.Diskon = 0;
-          this.pekerjaanSelected.Perkiraan = "";
-          this.pekerjaanSelected.DiskonRp = 0;
-          this.pekerjaanSelected.SubTotal =
-            this.pekerjaanSelected.HargaJualDefault;
-          this.pekerjaanSelected.Keterangan = "";
-          this.listPekerjaan.push(this.pekerjaanSelected);
+          const data = {
+            NoUrut:
+              parseInt(
+                this.listPekerjaan[this.listPekerjaan.length - 1].NoUrut
+              ) + 1,
+            Jumlah: 1,
+            Rasio: 1,
+            Diskon: 0,
+            DiskonRp: 0,
+            Perkiraan: this.pekerjaanSelected.Nama,
+            Keterangan: "",
+            Harga: 0,
+            SubTotal: 0,
+          };
+          this.listPekerjaan.push(data);
+        }
+      } else {
+        if (this.pekerjaanSelected.length != undefined) {
+          this.pekerjaanSelected.forEach((e, index) => {
+            const data = {
+              Perkiraan: e.Nama,
+              NoUrut: index + 1,
+              Jumlah: 1,
+              Rasio: 1,
+              Diskon: 0,
+              DiskonRp: 0,
+              Keterangan: "",
+              Harga: 0,
+              SubTotal: 0,
+            };
+            this.listPekerjaan.push(data);
+          });
+        } else {
+          const data = {
+            Perkiraan: this.pekerjaanSelected.Nama,
+            NoUrut: 1,
+            Jumlah: 1,
+            Rasio: 1,
+            Diskon: 0,
+            DiskonRp: 0,
+            Keterangan: "",
+            Harga: 0,
+            SubTotal: 0,
+          };
+          this.listPekerjaan.push(data);
         }
       }
       this.listPekerjaan = [...this.listPekerjaan];
       this.dialog = false;
     },
-    rowSelectedPekerjaan() {
+    rowSelectedPerkiraan() {
       this.pekerjaanSelected = this.$refs.ggs.ej2Instances.getSelectedRecords();
     },
     getDataPekerjaan() {
@@ -473,13 +465,13 @@ export default {
       this.setFocus = args.column;
     },
     onActionComplete(args) {
-      console.log(args);
+      // console.log(args);
       if (args.requestType === "beginEdit") {
         args.form.elements.namedItem(this.setFocus.field).focus();
       }
       if (args.requestType === "save") {
         let data = this.listPekerjaan;
-        console.log("diAction", data);
+        // console.log("diAction", data);
         this.listPekerjaan = data.map((item) => {
           item.Perkiraan =
             item.Perkiraan == null
@@ -495,7 +487,7 @@ export default {
         });
       }
       if (args.requestType === "delete" && this.title == "Ubah") {
-        console.log(args.data[0]);
+        // console.log(args.data[0]);
         if (
           args.data[0].KodeNota != undefined &&
           args.data[0].NoUrut != undefined

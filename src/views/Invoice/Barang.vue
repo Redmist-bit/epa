@@ -85,8 +85,8 @@
                   </e-column>
 
                   <e-column
-                    field="HargaJual"
-                    headerText="Harga Jual"
+                    field="Harga"
+                    headerText="Harga"
                     type="number"
                     format="N"
                     width="170"
@@ -130,14 +130,14 @@
         @actionComplete="onActionComplete"
       >
         <e-columns>
-          <e-column
+          <!-- <e-column
             field="BarangBekas"
             headerText="Barang Bekas"
             editType="booleanedit"
             displayAsCheckBox="true"
             width="170"
           >
-          </e-column>
+          </e-column> -->
 
           <e-column
             field="Barang"
@@ -149,21 +149,15 @@
           </e-column>
 
           <e-column
-            field="Perkiraan"
-            headerText="Perkiraan"
-            :edit="dopdownPerkiraan"
-            width="220"
-            editType="dropdownedit"
-          >
-          </e-column>
-
-          <e-column
             :filter="filter"
             field="Nama"
             :allowEditing="false"
             headerText="Nama"
             width="280"
           >
+          </e-column>
+
+          <e-column field="Keterangan" headerText="Keterangan" width="220">
           </e-column>
 
           <e-column
@@ -193,6 +187,8 @@
             field="Jumlah"
             headerText="Jumlah"
             width="170"
+            editType="numericedit"
+            type="number"
             textAlign="Right"
           >
           </e-column>
@@ -208,6 +204,7 @@
           <e-column
             field="Harga"
             type="number"
+            editType="numericedit"
             format="N"
             headerText="Harga"
             textAlign="Right"
@@ -215,7 +212,12 @@
           >
           </e-column>
 
-          <e-column field="Diskon" headerText="Diskon (%)" width="170">
+          <e-column
+            field="Diskon"
+            editType="numericedit"
+            headerText="Diskon (%)"
+            width="170"
+          >
           </e-column>
 
           <e-column
@@ -399,7 +401,7 @@ export default {
             let barangExist = this.listBarang.findIndex(
               (b) => b.Barang == data.Kode && b.Satuan == data.Satuan
             );
-            console.log(data, barangExist);
+            // console.log(data, barangExist);
             if (barangExist != -1) {
               this.listBarang[barangExist].Jumlah += 1;
               this.listBarang[barangExist].SubTotal = parseFloat(
@@ -412,12 +414,12 @@ export default {
             } else {
               data.Barang = data.Kode;
               data.Jumlah = 1;
-              data.Harga = data.HargaJual;
+              // data.Harga = data.Harga;
               data.Diskon = 0;
-              data.Perkiraan = "";
+              // data.Perkiraan = "";
               data.DiskonRp = 0;
-              data.SubTotal = data.HargaJual;
-              data.BarangBekas = false;
+              data.SubTotal = data.Harga;
+              // data.BarangBekas = false;
               this.listBarang.push(data);
             }
           });
@@ -439,12 +441,12 @@ export default {
           } else {
             this.barangSelected.Barang = this.barangSelected.Kode;
             this.barangSelected.Jumlah = 1;
-            this.barangSelected.BarangBekas = false;
-            this.barangSelected.Harga = this.barangSelected.HargaJual;
+            // this.barangSelected.BarangBekas = false;
+            // this.barangSelected.Harga = this.barangSelected.Harga;
             this.barangSelected.Diskon = 0;
-            this.barangSelected.Perkiraan = "";
+            // this.barangSelected.Perkiraan = "";
             this.barangSelected.DiskonRp = 0;
-            this.barangSelected.SubTotal = this.barangSelected.HargaJual;
+            this.barangSelected.SubTotal = this.barangSelected.Harga;
             this.listBarang.push(this.barangSelected);
           }
         }
@@ -453,24 +455,24 @@ export default {
           this.barangSelected.forEach((element) => {
             const data = element;
             data.Barang = data.Kode;
-            data.BarangBekas = false;
-            data.Harga = data.HargaJual;
+            // data.BarangBekas = false;
+            // data.Harga = data.Harga;
             data.Diskon = 0;
-            data.Perkiraan = "";
+            // data.Perkiraan = "";
             data.DiskonRp = 0;
-            data.SubTotal = data.HargaJual;
+            data.SubTotal = data.Harga;
             data.Jumlah = 1;
             this.listBarang.push(data);
           });
         } else {
           this.barangSelected.Barang = this.barangSelected.Kode;
           this.barangSelected.Jumlah = 1;
-          this.barangSelected.Harga = this.barangSelected.HargaJual;
+          // this.barangSelected.Harga = this.barangSelected.Harga;
           this.barangSelected.Diskon = 0;
           this.barangSelected.DiskonRp = 0;
-          this.barangSelected.Perkiraan = 0;
-          this.barangSelected.SubTotal = this.barangSelected.HargaJual;
-          this.barangSelected.BarangBekas = false;
+          // this.barangSelected.Perkiraan = 0;
+          this.barangSelected.SubTotal = this.barangSelected.Harga;
+          // this.barangSelected.BarangBekas = false;
           this.listBarang.push(this.barangSelected);
         }
       }
@@ -497,7 +499,13 @@ export default {
                 state.take
             )
             .then((res) => {
-              this.dataBarang = res.data;
+              this.dataBarang = {
+                result: res.data.result.map((p) => {
+                  p.Harga = p.Harga == null ? 0 : parseFloat(p.Harga);
+                  return p;
+                }),
+                count: res.data.count,
+              };
             });
         } else if (state.search == undefined) {
           this.getDataBarang(
@@ -532,7 +540,13 @@ export default {
                 20
             )
             .then((res) => {
-              this.dataBarang = res.data;
+              this.dataBarang = {
+                result: res.data.result.map((p) => {
+                  p.Harga = p.Harga == null ? 0 : parseFloat(p.Harga);
+                  return p;
+                }),
+                count: res.data.count,
+              };
             });
         } else {
           this.$refs.ggs.$el.ej2_instances[0].pageSettings.currentPage = 1;
@@ -555,7 +569,13 @@ export default {
         )
         .then(
           (res) => {
-            this.dataBarang = res.data;
+            this.dataBarang = {
+              result: res.data.result.map((p) => {
+                p.Harga = p.Harga == null ? 0 : parseFloat(p.Harga);
+                return p;
+              }),
+              count: res.data.count,
+            };
           },
           (err) => {
             console.log(err);

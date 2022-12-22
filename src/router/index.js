@@ -193,12 +193,29 @@ const routes = [
     },
   },
   {
-    path:'/paymentVoucher',
-    component: ()=>import('../components/PaymentVoucher.vue'),
-    name:'Payment Voucher',
+    path: "/paymentVoucher",
+    component: () => import("../components/PaymentVoucher.vue"),
+    name: "Payment Voucher",
     meta: {
       auth: true,
     },
+  },
+  
+  {
+    path:'/Mutasikas',
+    name: 'Mutasikas',
+    component: () => import(/* webpackChunkName: "Mutasikas" */ '../components/MutasiKas.vue'),
+    meta: {
+      auth: true
+    }
+  },
+  {
+    path:'/MutasiBank',
+    name: 'MutasiBank',
+    component: () => import(/* webpackChunkName: "MutasiBank" */ '../components/MutasiBank.vue'),
+    meta: {
+      auth: true
+    }
   },
 ];
 
