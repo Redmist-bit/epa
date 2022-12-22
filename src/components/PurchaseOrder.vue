@@ -2956,6 +2956,10 @@ export default {
     UpdateData() {
       this.editedItem.hapus_items = this.hapus_items;
       this.editedItem.hapus_itemsJasa = this.hapus_itemsJasa;
+      this.editedItem.Unit =
+        this.editedItem.Unit == ""
+          ? ""
+          : this.DataUnit.find((s) => s.Nama == this.editedItem.Unit).Kode;
       this.editedItem.items = this.itembarangpo
         .filter((v) => v.KodeNota != undefined)
         .map((i) => {
@@ -2963,6 +2967,10 @@ export default {
             i.Gudang == "" || i.Gudang == null
               ? JSON.parse(localStorage.getItem('user')).Kode.substr(0,4)+"/0001"
               : this.Gudang.find((g) => g.Nama == i.Gudang).Kode;
+          i.Unit =
+            i.Unit == "" || i.Unit == null
+              ? null
+              : this.DataUnit.find((u) => u.Nama == i.Unit).Kode;
           return i;
         });
       this.editedItem.new_items = this.itembarangpo
@@ -3139,6 +3147,7 @@ export default {
             this.editedItem.BillFrom = res.data.data.bill_from.Nama;
             this.editedItem.SellFrom = res.data.data.sell_from.Nama;
             this.editedItem.MataUang = res.data.data.uang.Nama;
+            this.editedItem.Unit = res.data.data.unit == null ? "" : res.data.data.unit.Nama;
             this.itembarangpo = res.data.data.items.map((v) => {
               v.DiskonRp = v.Diskon;
               v.Diskon = v.Diskon1;
@@ -3148,6 +3157,7 @@ export default {
                   (parseFloat(v.Harga) * parseFloat(v.Diskon)) / 100);
               v.Nama = v.barang.Nama;
               v.Merk = v.barang.Merk;
+              v.Unit = v.unit == null ? '' : v.unit.Nama
               // v.maxUpdateJumlah =
               //   parseInt(v.rpl.Jumlah) -
               //   parseInt(v.rpl.TerpenuhiPO) / parseInt(v.Rasio) +
@@ -3248,6 +3258,10 @@ export default {
           if (element.Perkiraan != '') {
             let findPerkiraan = this.Perkiraan.find(f => f.Nama == element.Perkiraan)
             element.KodePerkiraan = findPerkiraan == undefined ? '' : findPerkiraan.Kode
+          }
+          if (element.Unit != '') {
+            let findUnit = this.DataUnit.find(u => u.Nama == element.Unit)
+            element.KodeUnit = findUnit == undefined ? '' : findUnit.Kode
           }
       });
       this.Items.Pekerjaan = data

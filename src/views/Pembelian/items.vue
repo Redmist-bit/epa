@@ -620,7 +620,7 @@ export default {
             } else {
               // element.gudang = element.Gudang
               element.Keterangan = "";
-              element.Gudang = "GUDANG TA 1";
+              element.Gudang = "GUDANG EPA";
               element.Jumlah = 1;
               element.Barang = element.Kode;
               element.Harga = element.Harga == null ? 0 : element.Harga;
@@ -652,7 +652,7 @@ export default {
             this.storeSelect.Harga =
               this.storeSelect.Harga == null ? 0 : this.storeSelect.Harga;
             this.storeSelect.Diskon = 0;
-            this.storeSelect.Gudang = "GUDANG TA 1";
+            this.storeSelect.Gudang = "GUDANG EPA";
             this.storeSelect.DiskonRp = 0;
             this.storeSelect.SubTotal =
               this.storeSelect.Harga == null ? 0 : this.storeSelect.Harga;
@@ -666,7 +666,7 @@ export default {
             element.Keterangan = "";
             element.Jumlah = 1;
             element.Barang = element.Kode;
-            element.Gudang = "GUDANG TA 1";
+            element.Gudang = "GUDANG EPA";
             element.Harga = element.Harga == null ? 0 : element.Harga;
             element.Diskon = 0;
             element.DiskonRp = 0;
@@ -677,7 +677,7 @@ export default {
           console.log("disini", this.storeSelect);
           this.storeSelect.Barang = this.storeSelect.Kode;
           this.storeSelect.Jumlah = 1;
-          this.storeSelect.Gudang = "GUDANG TA 1";
+          this.storeSelect.Gudang = "GUDANG EPA";
           this.storeSelect.Harga =
             this.storeSelect.Harga == null ? 0 : this.storeSelect.Harga;
           this.storeSelect.Diskon = 0;

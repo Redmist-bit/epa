@@ -182,9 +182,20 @@ const routes = [
     },
   },
   {
-    path: '/PurchaseOrderJasa',
-    name: 'PurchaseOrderJasa',
-    component: () => import(/* webpackChunkName: "PurchaseOrderJasa" */ '../components/PurchaseOrderJasa.vue'),
+    path: "/PurchaseOrderJasa",
+    name: "PurchaseOrderJasa",
+    component: () =>
+      import(
+        /* webpackChunkName: "PurchaseOrderJasa" */ "../components/PurchaseOrderJasa.vue"
+      ),
+    meta: {
+      auth: true,
+    },
+  },
+  {
+    path:'/paymentVoucher',
+    component: ()=>import('../components/PaymentVoucher.vue'),
+    name:'Payment Voucher',
     meta: {
       auth: true,
     },
