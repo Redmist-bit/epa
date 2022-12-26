@@ -200,22 +200,48 @@ const routes = [
       auth: true,
     },
   },
-  
+
   {
-    path:'/Mutasikas',
-    name: 'Mutasikas',
-    component: () => import(/* webpackChunkName: "Mutasikas" */ '../components/MutasiKas.vue'),
+    path: "/Mutasikas",
+    name: "Mutasikas",
+    component: () =>
+      import(/* webpackChunkName: "Mutasikas" */ "../components/MutasiKas.vue"),
     meta: {
-      auth: true
-    }
+      auth: true,
+    },
   },
   {
-    path:'/MutasiBank',
-    name: 'MutasiBank',
-    component: () => import(/* webpackChunkName: "MutasiBank" */ '../components/MutasiBank.vue'),
+    path: "/MutasiBank",
+    name: "MutasiBank",
+    component: () =>
+      import(
+        /* webpackChunkName: "MutasiBank" */ "../components/MutasiBank.vue"
+      ),
     meta: {
-      auth: true
-    }
+      auth: true,
+    },
+  },
+  {
+    path: "/PembayaranPiutang",
+    name: "PembayaranPiutang",
+    component: () =>
+      import(
+        /* webpackChunkName: "PembayaranPiutang" */ "../components/PembayaranPiutang.vue"
+      ),
+    meta: {
+      auth: true,
+    },
+  },
+  {
+    path: "/PembayaranHutang",
+    name: "PembayaranHutang",
+    component: () =>
+      import(
+        /* webpackChunkName: "PembayaranHutang" */ "../components/PembayaranHutang.vue"
+      ),
+    meta: {
+      auth: true,
+    },
   },
 ];
 
