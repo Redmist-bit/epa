@@ -215,7 +215,7 @@ export default {
         required: true,
         min: [
           this.customValidationMin,
-          "Tidak Boleh Kurang dari 0 / receive pembelian"
+          "Tidak Boleh Kurang dari 0 / receive pembelian",
         ],
         // max:  [this.customValidationFn,'Tidak Boleh Lebih dari Permintaan saat RWL']
       },
@@ -327,10 +327,10 @@ export default {
         this.hapus_items = [];
         this.items = [...this.items];
       }
-    //   if (ket == "Ubah") {
-    //     this.JumlahRules.max[1] =
-    //       "Tidak Boleh Lebih dari Permintaan saat RWL / Tidak Boleh Kurang dari receive pembelian";
-    //   }
+      //   if (ket == "Ubah") {
+      //     this.JumlahRules.max[1] =
+      //       "Tidak Boleh Lebih dari Permintaan saat RWL / Tidak Boleh Kurang dari receive pembelian";
+      //   }
     },
     items(val) {
       this.$emit("itemsPoJasa", val);
@@ -359,13 +359,13 @@ export default {
     customValidationMin(args) {
       if (this.title == "Ubah") {
         if (parseInt(args.value) >= parseInt(this.Terpenuhi)) {
-          return true
+          return true;
         } else {
-          return false
+          return false;
         }
       } else {
         if (parseInt(args.value) > 0) {
-          return true
+          return true;
         }
       }
     },

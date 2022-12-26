@@ -197,11 +197,7 @@
             width="170"
           >
           </e-column>
-          <e-column
-            field="Keterangan"
-            headerText="Keterangan"
-            width="170"
-          >
+          <e-column field="Keterangan" headerText="Keterangan" width="170">
           </e-column>
           <e-column
             field="Jumlah"

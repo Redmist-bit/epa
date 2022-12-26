@@ -1799,9 +1799,9 @@ export default {
       commandsMobile: [
         { buttonOption: { content: "Details", cssClass: "e-flat Details" } },
       ],
-      Items:{
+      Items: {
         Barang: [],
-        Pekerjaan: []
+        Pekerjaan: [],
       },
       groupSettings: { allowReordering: true },
       selectionOptions: { type: "Multiple" },
@@ -1947,20 +1947,31 @@ export default {
     dialogPilihSellFrom(val) {
       val || this.closePilihSellFrom();
     },
-    Items:{
+    Items: {
       deep: true,
-      handler(val){
-          // console.log(this.Items)
-          let totalBarang = val.Barang.reduce((a,b) => a + parseFloat(b.SubTotal), 0)
-          let totalPekerjaan =  val.Pekerjaan.reduce((a,b) => a + parseFloat(b.SubTotal), 0)
-          let PPn = parseFloat(totalPekerjaan + totalBarang) * parseFloat(this.editedItem.PPnPersen) / 100
-          this.editedItem.Diskon =  val.Barang.reduce((a,b) => a + parseFloat(b.DiskonRp), 0) + val.Pekerjaan.reduce((a,b) => a + parseFloat(b.DiskonRp), 0)
-          this.editedItem.DPP = totalBarang + totalPekerjaan
-          this.editedItem.Total = this.editedItem.Diskon + this.editedItem.DPP
-          // console.log(this.editedItem.Total)
-          this.editedItem.PPn = PPn
-          this.editedItem.TotalBayar = totalBarang + totalPekerjaan + PPn
-      }
+      handler(val) {
+        // console.log(this.Items)
+        let totalBarang = val.Barang.reduce(
+          (a, b) => a + parseFloat(b.SubTotal),
+          0
+        );
+        let totalPekerjaan = val.Pekerjaan.reduce(
+          (a, b) => a + parseFloat(b.SubTotal),
+          0
+        );
+        let PPn =
+          (parseFloat(totalPekerjaan + totalBarang) *
+            parseFloat(this.editedItem.PPnPersen)) /
+          100;
+        this.editedItem.Diskon =
+          val.Barang.reduce((a, b) => a + parseFloat(b.DiskonRp), 0) +
+          val.Pekerjaan.reduce((a, b) => a + parseFloat(b.DiskonRp), 0);
+        this.editedItem.DPP = totalBarang + totalPekerjaan;
+        this.editedItem.Total = this.editedItem.Diskon + this.editedItem.DPP;
+        // console.log(this.editedItem.Total)
+        this.editedItem.PPn = PPn;
+        this.editedItem.TotalBayar = totalBarang + totalPekerjaan + PPn;
+      },
     },
   },
 
@@ -2117,17 +2128,17 @@ export default {
       this.hapus_items = data;
     },
     hps_itemsJasa(data) {
-      console.log(data)
+      console.log(data);
       this.hapus_itemsJasa = data;
     },
-    itemsJasa(data){
-      console.log(data)
-      this.ItemsPembelianJasa = data
-      this.Items.Pekerjaan = data
+    itemsJasa(data) {
+      console.log(data);
+      this.ItemsPembelianJasa = data;
+      this.Items.Pekerjaan = data;
     },
     items(data) {
       this.ItemsPembelian = data;
-      this.Items.Barang = data
+      this.Items.Barang = data;
       // this.editedItem.Total = data.reduce(
       //   (a, b) => a + parseFloat(b.Jumlah * b.Harga),
       //   0
@@ -2161,7 +2172,10 @@ export default {
           this.alert = true;
           this.pesan = "Kurs tidak boleh kosong";
         } else {
-          if (this.ItemsPembelian.length == 0 && this.ItemsPembelianJasa.length == 0) {
+          if (
+            this.ItemsPembelian.length == 0 &&
+            this.ItemsPembelianJasa.length == 0
+          ) {
             alert("Data Items kosong");
           } else {
             this.TambahData();
@@ -2217,20 +2231,20 @@ export default {
               return d;
             });
           this.itemspojasa = res.data.jasa
-              .filter((v) => parseFloat(v.Terpenuhi) < v.Jumlah)
-              .map((v) => {
-                v.JumlahSisa = parseFloat(v.Jumlah) - parseFloat(v.Terpenuhi);
-                v.Jumlah = parseFloat(v.Jumlah) - parseFloat(v.Terpenuhi);
-                v.DiskonRp = v.Diskon;
-                v.Diskon = v.Diskon1;
-                v.SubTotal =
-                  v.Jumlah *
-                  (parseFloat(v.Harga) -
-                    (parseFloat(v.Harga) * parseFloat(v.Diskon)) / 100);
-                v.Perkiraan = v.perkiraan.Nama;
-                // v.JenisPekerjaan = v.pekerjaan.Nama;
-                return v;
-              });
+            .filter((v) => parseFloat(v.Terpenuhi) < v.Jumlah)
+            .map((v) => {
+              v.JumlahSisa = parseFloat(v.Jumlah) - parseFloat(v.Terpenuhi);
+              v.Jumlah = parseFloat(v.Jumlah) - parseFloat(v.Terpenuhi);
+              v.DiskonRp = v.Diskon;
+              v.Diskon = v.Diskon1;
+              v.SubTotal =
+                v.Jumlah *
+                (parseFloat(v.Harga) -
+                  (parseFloat(v.Harga) * parseFloat(v.Diskon)) / 100);
+              v.Perkiraan = v.perkiraan.Nama;
+              // v.JenisPekerjaan = v.pekerjaan.Nama;
+              return v;
+            });
           // console.log(res)
           // console.log('data',data)
         },
@@ -2337,7 +2351,8 @@ export default {
       this.editedItem.items = this.ItemsPembelian.map((v) => {
         v.Gudang =
           v.Gudang == "" || v.Gudang == null
-            ? JSON.parse(localStorage.getItem('user')).Kode.substr(0,4)+"/0001"
+            ? JSON.parse(localStorage.getItem("user")).Kode.substr(0, 4) +
+              "/0001"
             : this.gudang.find((g) => g.Nama == v.Gudang).Kode;
         return v;
       });
@@ -2370,7 +2385,8 @@ export default {
       ).map((i) => {
         i.Gudang =
           i.Gudang == "" || i.Gudang == null
-            ? JSON.parse(localStorage.getItem('user')).Kode.substr(0,4)+"/0001"
+            ? JSON.parse(localStorage.getItem("user")).Kode.substr(0, 4) +
+              "/0001"
             : this.gudang.find((g) => g.Nama == i.Gudang).Kode;
         return i;
       });
@@ -2379,7 +2395,8 @@ export default {
       ).map((i) => {
         i.Gudang =
           i.Gudang == "" || i.Gudang == null
-            ? JSON.parse(localStorage.getItem('user')).Kode.substr(0,4)+"/0001"
+            ? JSON.parse(localStorage.getItem("user")).Kode.substr(0, 4) +
+              "/0001"
             : this.gudang.find((g) => g.Nama == i.Gudang).Kode;
         return i;
       });

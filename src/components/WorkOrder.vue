@@ -349,7 +349,7 @@
                           'Konstruksi Gedung',
                           'Konstruksi Jalan',
                           'Konstruksi Bangunan Air',
-                          'Rental'
+                          'Rental',
                         ]"
                         v-model="editedItem.JenisWorkOrder"
                         label="Jenis Work Order"
@@ -2576,8 +2576,8 @@ export default {
   data() {
     return {
       alert: "",
-      dialogUnit:false,
-      Unit:[],
+      dialogUnit: false,
+      Unit: [],
       dialogExcel: false,
       dialogMataUangEstimasi: false,
       BarangExcel: [],
@@ -2678,7 +2678,7 @@ export default {
         PPnPersen: 0,
         ReserveOutcome: 0,
         ReserveOutcomeJasa: 0,
-        Unit:''
+        Unit: "",
       },
       editedItem: {
         KodeNota: "",
@@ -2702,7 +2702,7 @@ export default {
         PPnPersen: 0,
         ReserveOutcome: 0,
         ReserveOutcomeJasa: 0,
-        Unit:''
+        Unit: "",
       },
       Estimasi: {
         KodeNota: "",
@@ -3074,7 +3074,7 @@ export default {
     },
   },
   methods: {
-    getUnit(){
+    getUnit() {
       api.get("unit?token=" + this.token).then(
         (res) => {
           this.isLoading = false;
@@ -3598,7 +3598,10 @@ export default {
       // this.editedItem.Lessor = Lessor.Kode
       this.editedItem.MataUang = MataUang.Kode;
       // this.editedItem.keluhan = this.ItemsKeluhan
-      this.editedItem.Unit = this.editedItem.Unit == "" ? "" : this.Unit.find(p => p.Nama == this.editedItem.Unit).Kode
+      this.editedItem.Unit =
+        this.editedItem.Unit == ""
+          ? ""
+          : this.Unit.find((p) => p.Nama == this.editedItem.Unit).Kode;
       api
         .post("/workOrder?token=" + this.token, this.editedItem)
         .then(() => {
@@ -3625,7 +3628,10 @@ export default {
       this.editedItem.MataUang = MataUang.Kode;
       // this.editedItem.keluhan = this.ItemsKeluhan
       // this.editedItem.hapus_items = this.hapus_items
-      this.editedItem.Unit = this.editedItem.Unit == "" ? "" : this.Unit.find(p => p.Nama == this.editedItem.Unit).Kode
+      this.editedItem.Unit =
+        this.editedItem.Unit == ""
+          ? ""
+          : this.Unit.find((p) => p.Nama == this.editedItem.Unit).Kode;
       api
         .put(
           "workOrder/" + this.editedItem.id + "?token=" + this.token,
@@ -3784,7 +3790,8 @@ export default {
         this.editedItem.PPnPersen = args.rowData.PPnPersen;
         this.editedItem.ReserveOutcome = args.rowData.ReserveOutcome;
         this.editedItem.ReserveOutcomeJasa = args.rowData.ReserveOutcomeJasa;
-        this.editedItem.Unit = args.rowData.unit == null ? "" : args.rowData.unit.Nama;
+        this.editedItem.Unit =
+          args.rowData.unit == null ? "" : args.rowData.unit.Nama;
         this.isLoading = false;
         this.editedIndex = 1;
         this.title = "Ubah";

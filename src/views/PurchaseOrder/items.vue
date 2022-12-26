@@ -453,7 +453,7 @@ export default {
         required: true,
         min: [
           this.customValidationMin,
-          "Tidak Boleh Kurang dari 0 / receive pembelian"
+          "Tidak Boleh Kurang dari 0 / receive pembelian",
         ],
         // max: [
         //   this.customValidationFn,
@@ -608,13 +608,13 @@ export default {
     customValidationMin(args) {
       if (this.title == "Ubah") {
         if (parseInt(args.value) >= parseInt(this.Terpenuhi)) {
-          return true
+          return true;
         } else {
-          return false
+          return false;
         }
       } else {
         if (parseInt(args.value) > 0) {
-          return true
+          return true;
         }
       }
     },
@@ -866,7 +866,13 @@ export default {
                 state.take
             )
             .then((res) => {
-              this.dataBarang = res.data;
+              this.dataBarang = {
+                result: res.data.result.map((p) => {
+                  p.Harga = parseFloat(p.Harga);
+                  return p;
+                }),
+                count: res.data.count,
+              };
             });
         } else if (state.search == undefined) {
           this.getDataBarang(
@@ -901,7 +907,13 @@ export default {
                 100
             )
             .then((res) => {
-              this.dataBarang = res.data;
+              this.dataBarang = {
+                result: res.data.result.map((p) => {
+                  p.Harga = parseFloat(p.Harga);
+                  return p;
+                }),
+                count: res.data.count,
+              };
             });
         } else {
           this.$refs.ggs.$el.ej2_instances[0].pageSettings.currentPage = 1;

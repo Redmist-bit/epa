@@ -2,11 +2,10 @@ import axios from "axios";
 
 if (process.env.NODE_ENV == "production") {
   let domain = window.location.origin;
-  if (domain.includes("8008")) {
-    axios.defaults.baseURL =
-      domain.replace(":8008", "/") + "erp/server.php/api";
+  if (domain.includes("88")) {
+    axios.defaults.baseURL = domain.replace(":88", "/") + "epab/server.php/api";
   } else {
-    axios.defaults.baseURL = domain + "/erp/server.php/api";
+    axios.defaults.baseURL = domain + "/epab/server.php/api";
   }
 } else {
   axios.defaults.baseURL = "http://localhost:8000/api";
