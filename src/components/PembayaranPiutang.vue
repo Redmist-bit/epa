@@ -1721,7 +1721,7 @@ export default {
             this.items_invoice = res.data.data.itemsinvoice.map((p) => {
               p.Jumlah = parseFloat(p.Jumlah);
               p.TotalBayar = parseFloat(p.invoice.TotalBayar);
-              p.SisaBayar = parseFloat(p.invoice.SisaBayar);
+              p.SisaBayar = parseFloat(p.invoice.SisaBayar) + p.Jumlah;
               // p.OnRisk = p.invoice.OnRisk;
               p.KodeNotaMaster = p.KodeNota;
               p.KodeNota = p.invoice.KodeNota;

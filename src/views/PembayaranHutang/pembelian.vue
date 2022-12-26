@@ -287,7 +287,7 @@ export default {
       storeSelect: [],
       customerJumlahRules: {
         required: true,
-        max: [this.customValidationFn, "Tidak Boleh Lebih dari Total Bayar"],
+        max: [this.customValidationFn, "Tidak Boleh Lebih dari Sisa Bayar"],
       },
       hapus_items: [],
       ItemsFakturHutang: [],
@@ -400,7 +400,7 @@ export default {
       // console.log('ccs',args)
       if (
         parseFloat(args.value) <=
-        parseFloat(args.element.form[2].ej2_instances[0].initialValue)
+        parseFloat(args.element.form[3].ej2_instances[0].initialValue)
       ) {
         return true;
       } else {
@@ -410,24 +410,24 @@ export default {
     contextMenuClick(args) {
       // console.log(args);
       if (args.item.id == "lunas") {
-        args.rowInfo.rowData.Jumlah = args.rowInfo.rowData.TotalBayar;
-        args.rowInfo.rowData.SisaBayar = 0;
+        args.rowInfo.rowData.Jumlah = args.rowInfo.rowData.SisaBayar;
+        // args.rowInfo.rowData.SisaBayar = 0;
       }
       if (args.item.id == "batalbayar") {
         args.rowInfo.rowData.Jumlah = 0;
-        args.rowInfo.rowData.SisaBayar = args.rowInfo.rowData.TotalBayar;
+        // args.rowInfo.rowData.SisaBayar = args.rowInfo.rowData.TotalBayar;
       }
       if (args.item.id == "lunassemua") {
         this.ItemsFakturHutang = this.ItemsFakturHutang.map((d) => {
-          d.Jumlah = d.TotalBayar;
-          d.SisaBayar = 0;
+          d.Jumlah = d.SisaBayar;
+          // d.SisaBayar = 0;
           return d;
         });
       }
       if (args.item.id == "batalbayarsemua") {
         this.ItemsFakturHutang = this.ItemsFakturHutang.map((d) => {
           d.Jumlah = 0;
-          d.SisaBayar = d.TotalBayar;
+          // d.SisaBayar = d.TotalBayar;
           return d;
         });
       }

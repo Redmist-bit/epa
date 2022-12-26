@@ -1723,7 +1723,7 @@ export default {
             this.items_pembelian = res.data.data.itemspembelian.map((p) => {
               p.Jumlah = parseFloat(p.Jumlah);
               p.TotalBayar = parseFloat(p.faktur.TotalBayar);
-              p.SisaBayar = parseFloat(p.faktur.SisaBayar);
+              p.SisaBayar = parseFloat(p.faktur.SisaBayar) + p.Jumlah;
               p.KodeNotaMaster = p.KodeNota;
               p.KodeNota = p.faktur.KodeNota;
               p.wo = p.faktur.wo;
