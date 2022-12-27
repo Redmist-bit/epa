@@ -39,7 +39,7 @@
               <v-container>
                 <v-row>
                   <v-col cols="12" sm="6" md="6">
-                    <v-text-field label="Perkiraan" v-model="detail.Perkiraan">
+                    <v-text-field label="Perkiraan" readonly v-model="detail.Perkiraan">
                       <template v-slot:append>
                         <v-dialog v-model="dialogPerkiraan">
                           <template v-slot:activator="{ on, attrs }">
@@ -148,7 +148,7 @@
                     </v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
-                    <v-text-field label="Nomor WO" v-model="detail.NomorWO">
+                    <v-text-field label="Nomor WO" readonly v-model="detail.NomorWO">
                       <template v-slot:append>
                         <v-dialog v-model="dialogNoWO">
                           <template v-slot:activator="{ on, attrs }">
@@ -270,7 +270,7 @@
                     </v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
-                    <v-text-field label="Mata Uang" v-model="detail.MataUang">
+                    <v-text-field label="Mata Uang" readonly v-model="detail.MataUang">
                       <template v-slot:append>
                         <v-dialog v-model="dialogUang">
                           <template v-slot:activator="{ on, attrs }">
@@ -658,7 +658,7 @@ export default {
         JenisWorkOrder: "",
         Departemen: "",
         Keterangan: "",
-        MataUang: "",
+        MataUang: "Rupiah",
         JumlahAsing: 1,
         Kurs: 1,
         Jumlah: 1,
@@ -670,7 +670,7 @@ export default {
         JenisWorkOrder: "",
         Departemen: "",
         Keterangan: "",
-        MataUang: "",
+        MataUang: "Rupiah",
         JumlahAsing: 1,
         Kurs: 1,
         Jumlah: 1,
@@ -804,24 +804,24 @@ export default {
       this.dialogNoWO = false;
     },
     Done() {
-      if (this.listDetail.length == 0) {
-        this.detail.NoUrut = 1;
-        this.listDetail.push(this.detail);
+      if (this.detail.Perkiraan == "" || this.detail.Lokasi == "" || this.detail.JenisWorkOrder == "" || this.detail.Departemen == "") {
+        alert('Perkiraan, Lokasi, JenisWorkOrder, dan Departemen tidak boleh kosong')
       } else {
-        // console.log(this.listDetail.sort((a,b) => parseInt(b.NoUrut) - parseInt(a.NoUrut)))
-        this.detail.NoUrut =
-          this.listDetail.sort(
-            (a, b) => parseInt(b.NoUrut) - parseInt(a.NoUrut)
-          )[0].NoUrut + 1;
-        this.listDetail.push(this.detail);
+        if (this.listDetail.length == 0) {
+          this.detail.NoUrut = 1;
+          this.listDetail.push(this.detail);
+        } else {
+          this.detail.NoUrut =
+            this.listDetail.sort(
+              (a, b) => parseInt(b.NoUrut) - parseInt(a.NoUrut)
+            )[0].NoUrut + 1;
+          this.listDetail.push(this.detail);
+        }
+        this.listDetail = [...this.listDetail];
+        document.getElementById("Grid").ej2_instances[0].refresh();
+        console.log(this.listDetail);
+        this.dialogDetail = false;
       }
-      this.listDetail = [...this.listDetail];
-      document.getElementById("Grid").ej2_instances[0].refresh();
-      console.log(this.listDetail);
-      // this.$nextTick(() => {
-      //   this.detail = Object.assign({}, this.detailDefault)
-      this.dialogDetail = false;
-      // })
     },
     dataStateChange: function (state) {
       if (state.action.requestType === "paging") {

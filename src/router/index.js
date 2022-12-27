@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+// import Home from "../views/Home.vue";
 import login from "../components/login.vue";
 import User from "../components/User.vue";
 import Gudang from "@/components/Gudang";
@@ -9,11 +9,11 @@ import Supplier from "@/components/Supplier";
 Vue.use(VueRouter);
 
 const routes = [
-  {
-    path: "/",
-    name: "Home",
-    component: Home,
-  },
+  // {
+  //   path: "/",
+  //   name: "Home",
+  //   component: Home,
+  // },
   {
     path: "/ChangePwd",
     name: "ChangePwd",

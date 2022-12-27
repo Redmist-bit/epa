@@ -608,13 +608,13 @@ export default {
       defaultItem: {
         KodeNota: "",
         Referensi: "",
-        Tanggal: "",
+        Tanggal: new Date().toISOString().substr(0, 10),
         Keterangan: "",
       },
       editedItem: {
         KodeNota: "",
         Referensi: "",
-        Tanggal: "",
+        Tanggal: new Date().toISOString().substr(0, 10),
         Keterangan: "",
       },
       hapus_items: [],
